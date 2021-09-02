@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(hidden = true)
 @SpringBootApplication
 @EnableTransactionManagement
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
+
 public class AppRun {
 
     public static void main(String[] args) {
