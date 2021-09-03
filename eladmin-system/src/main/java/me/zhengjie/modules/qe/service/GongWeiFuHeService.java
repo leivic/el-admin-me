@@ -19,4 +19,8 @@ public class GongWeiFuHeService {
         return gongWeiFuHeRepository.findAll();
 
     }
+
+    public List<GongWeiFuHe> selectGongWeiFuHeListByDate(String date,String pingShengXingZhi){
+        return gongWeiFuHeRepository.selectGongWeiFuHeListByDate(date,pingShengXingZhi);
+    }
 }
