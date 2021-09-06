@@ -3,14 +3,20 @@ package me.zhengjie.modules.qe.rest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.modules.qe.domain.EnvironmentBaseStation;
 import me.zhengjie.modules.qe.domain.GongWeiFuHe;
 import me.zhengjie.modules.qe.polo.GongWeiFuHeLastData;
+import me.zhengjie.modules.qe.service.EnvironmentBaseStationService;
 import me.zhengjie.modules.qe.service.GongWeiFuHeService;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +29,8 @@ public class EnvironmentController {
     @Autowired
     private GongWeiFuHeService gongWeiFuHeService;
 
+    @Autowired
+    private EnvironmentBaseStationService environmentBaseStationService;
 
     @ApiOperation("查询所有工位数据")
     @GetMapping(value = "/findAllGongWeiFuHe")
@@ -61,6 +69,42 @@ public class EnvironmentController {
         }
 
         return gongWeiFuHeLastData;
+
+    }
+
+    @ApiOperation("增加工位基础数据")
+    @PostMapping(value = "/addEnvironmentBaseStation")
+    public void addEnvironmentBaseStation(@RequestParam("file") MultipartFile file) throws IOException{
+        System.out.println("执行程序");
+        FileInputStream fns=(FileInputStream)file.getInputStream();
+        XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
+        XSSFSheet sheetAt = wb.getSheetAt(0);
+        if(sheetAt==null) {
+            return;
+        }
+
+        String written_by= sheetAt.getRow(0).getCell(2).toString();//第一行第三个单元格 :编写人
+        String date= "2021-09"; //sheetAt.getRow(0).getCell(3).toString();第一行第四个单元格 :日期
+        String zone=sheetAt.getRow(0).getCell(5).toString();//第一行第五个单元格 :区域
+
+        for (int i = 5; i <sheetAt.getRow(1).getLastCellNum() ; i++) {
+            EnvironmentBaseStation environmentBaseStation = new EnvironmentBaseStation();
+            environmentBaseStation.setStation(sheetAt.getRow(1).getCell(i).toString()); //第一行，第i列，全是工位
+            environmentBaseStation.setZone(zone);
+            environmentBaseStation.setDate(date);
+            environmentBaseStation.setWritten_by(written_by);
+            environmentBaseStation.setPeopleiscapable(sheetAt.getRow(2).getCell(i).getNumericCellValue());
+            environmentBaseStation.setMatteriscorrect(sheetAt.getRow(3).getCell(i).getNumericCellValue());
+            environmentBaseStation.setWokerisstandard(sheetAt.getRow(4).getCell(i).getNumericCellValue());
+            environmentBaseStation.setWokerstability(sheetAt.getRow(5).getCell(i).getNumericCellValue());
+            environmentBaseStation.setStationshutdown(sheetAt.getRow(6).getCell(i).getNumericCellValue());
+            environmentBaseStation.setMattershutdown(sheetAt.getRow(7).getCell(i).getNumericCellValue());
+            environmentBaseStation.setX1(sheetAt.getRow(8).getCell(i).getNumericCellValue());
+            environmentBaseStation.setLow_carbon_1(sheetAt.getRow(9).getCell(i).getNumericCellValue());
+            environmentBaseStation.setIso(sheetAt.getRow(10).getCell(i).getNumericCellValue());
+            environmentBaseStation.setX2(sheetAt.getRow(11).getCell(i).getNumericCellValue());
+            environmentBaseStationService.insertEnvironmentBaseStation(environmentBaseStation); //将对象添加进数据库
+        }
 
     }
 }
