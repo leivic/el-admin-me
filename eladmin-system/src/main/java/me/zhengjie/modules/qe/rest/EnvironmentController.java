@@ -10,8 +10,10 @@ import me.zhengjie.modules.qe.service.EnvironmentBaseStationService;
 import me.zhengjie.modules.qe.service.GongWeiFuHeService;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tools.ant.taskdefs.condition.Http;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -72,7 +74,7 @@ public class EnvironmentController {
 
     }
 
-    @ApiOperation("增加工位基础数据")
+    @ApiOperation("工位: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseStation")
     public void addEnvironmentBaseStation(@RequestParam("file") MultipartFile file) throws IOException{
         System.out.println("执行程序");
@@ -83,8 +85,8 @@ public class EnvironmentController {
             return;
         }
 
-        String written_by= sheetAt.getRow(0).getCell(2).toString();//第一行第三个单元格 :编写人
-        String date= "2021-09"; //sheetAt.getRow(0).getCell(3).toString();第一行第四个单元格 :日期
+        String written_by= sheetAt.getRow(0).getCell(2).toString();//第一行第三个单元格 :编写
+        String date="20"+sheetAt.getRow(0).getCell(3).toString().substring(3,5)+"-"+sheetAt.getRow(0).getCell(3).toString().substring(6,8);
         String zone=sheetAt.getRow(0).getCell(5).toString();//第一行第五个单元格 :区域
 
         for (int i = 5; i <sheetAt.getRow(1).getLastCellNum() ; i++) {

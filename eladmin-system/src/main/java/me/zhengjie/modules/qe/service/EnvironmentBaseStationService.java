@@ -19,9 +19,13 @@ public class EnvironmentBaseStationService {
     /*参数为一条数据对象，增加数据 .save()*/
     public void insertEnvironmentBaseStation(EnvironmentBaseStation environmentBaseStation){
         environmentBaseStationRepository.save(environmentBaseStation);
+
     }
     /*按照id删除对象*/
     public void deleteEnvironmentBaseStation(int id){
         environmentBaseStationRepository.deleteById(id);
     }
+
+    /*重新排序id*/
+
 }
