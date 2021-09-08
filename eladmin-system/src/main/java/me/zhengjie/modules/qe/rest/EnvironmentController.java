@@ -11,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tools.ant.taskdefs.condition.Http;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -112,6 +113,12 @@ public class EnvironmentController {
             environmentBaseStationService.insertEnvironmentBaseStation(environmentBaseStation); //将对象添加进数据库
         }
 
+    }
+
+    @ApiOperation("工位: 查询基础数据")
+    @GetMapping(value = "/findAllEnvironmentBaseStation")
+    public Page<EnvironmentBaseStation> findAllEnvironmentBaseStation(int page,int size,String sort){
+        return environmentBaseStationService.findAllEnvironmentBaseStation(page,size,sort);
     }
 
     @ApiOperation("班组: 增加基础数据")
@@ -247,4 +254,6 @@ public class EnvironmentController {
             environmentBaseZoneService.insertEnrironmentBaseZone(environmentBaseZone);
         }
     }
+
+
 }
