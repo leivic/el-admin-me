@@ -3,11 +3,9 @@ package me.zhengjie.modules.qe.rest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import me.zhengjie.modules.qe.domain.EnvironmentBaseStation;
-import me.zhengjie.modules.qe.domain.GongWeiFuHe;
+import me.zhengjie.modules.qe.domain.*;
 import me.zhengjie.modules.qe.polo.GongWeiFuHeLastData;
-import me.zhengjie.modules.qe.service.EnvironmentBaseStationService;
-import me.zhengjie.modules.qe.service.GongWeiFuHeService;
+import me.zhengjie.modules.qe.service.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tools.ant.taskdefs.condition.Http;
@@ -33,6 +31,13 @@ public class EnvironmentController {
 
     @Autowired
     private EnvironmentBaseStationService environmentBaseStationService;
+
+    @Autowired
+    private EnvironmentBaseGroupService environmentBaseGroupService;
+    @Autowired
+    private EnvironmentBaseWorkShopService environmentBaseWorkShopService;
+    @Autowired
+    private EnvironmentBaseZoneService environmentBaseZoneService;
 
     @ApiOperation("查询所有工位数据")
     @GetMapping(value = "/findAllGongWeiFuHe")
@@ -77,7 +82,6 @@ public class EnvironmentController {
     @ApiOperation("工位: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseStation")
     public void addEnvironmentBaseStation(@RequestParam("file") MultipartFile file) throws IOException{
-        System.out.println("执行程序");
         FileInputStream fns=(FileInputStream)file.getInputStream();
         XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
         XSSFSheet sheetAt = wb.getSheetAt(0);
@@ -108,5 +112,139 @@ public class EnvironmentController {
             environmentBaseStationService.insertEnvironmentBaseStation(environmentBaseStation); //将对象添加进数据库
         }
 
+    }
+
+    @ApiOperation("班组: 增加基础数据")
+    @PostMapping(value = "/addEnvironmentBaseGroup")
+    public void addEnvironmentBaseGroup(@RequestParam("file") MultipartFile file) throws IOException{
+        FileInputStream fns=(FileInputStream)file.getInputStream();
+        XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
+        XSSFSheet sheetAt = wb.getSheetAt(0);
+        if(sheetAt==null) {
+            return;
+        }
+
+        String written_by= sheetAt.getRow(0).getCell(2).toString();//第一行第三个单元格 :编写
+        String date="20"+sheetAt.getRow(0).getCell(3).toString().substring(3,5)+"-"+sheetAt.getRow(0).getCell(3).toString().substring(6,8);
+        String zone=sheetAt.getRow(0).getCell(5).toString();//第一行第五个单元格 :区域
+
+        for (int i = 5; i <sheetAt.getRow(1).getLastCellNum() ; i++) {
+            EnvironmentBaseGroup environmentBaseGroup=new EnvironmentBaseGroup();
+            environmentBaseGroup.setGroup1(sheetAt.getRow(1).getCell(i).toString());
+            environmentBaseGroup.setDate(date);
+            environmentBaseGroup.setZone(zone);
+            environmentBaseGroup.setWritten_by(written_by);
+            environmentBaseGroup.setGroupstability(sheetAt.getRow(2).getCell(i).getNumericCellValue());
+            environmentBaseGroup.setGrouprotation(sheetAt.getRow(3).getCell(i).getNumericCellValue());
+            environmentBaseGroup.setExternalaudit(sheetAt.getRow(4).getCell(i).getNumericCellValue());
+            environmentBaseGroup.setBookkeepingmanagement(sheetAt.getRow(5).getCell(i).getNumericCellValue());
+            environmentBaseGroup.setLossgroupstability(sheetAt.getRow(6).getCell(i).getNumericCellValue());
+            environmentBaseGroup.setGroupbusiness(sheetAt.getRow(7).getCell(i).getNumericCellValue());
+            environmentBaseGroup.setX3(sheetAt.getRow(8).getCell(i).getNumericCellValue());
+            environmentBaseGroup.setFlowpath(sheetAt.getRow(9).getCell(i).getNumericCellValue());
+            environmentBaseGroup.setConsistency(sheetAt.getRow(10).getCell(i).getNumericCellValue());
+            environmentBaseGroup.setX4(sheetAt.getRow(11).getCell(i).getNumericCellValue());
+            environmentBaseGroup.setHealthquthority(sheetAt.getRow(12).getCell(i).getNumericCellValue());
+            environmentBaseGroup.setLosshealthquthority(sheetAt.getRow(13).getCell(i).getNumericCellValue());
+            environmentBaseGroup.setX5(sheetAt.getRow(14).getCell(i).getNumericCellValue());
+
+            environmentBaseGroupService.insertEnvironmentBaseGroup(environmentBaseGroup);
+        }
+    }
+
+    /*完成，目前无bug*/
+    @ApiOperation("工段: 增加基础数据")
+    @PostMapping(value = "/addEnvironmentBaseWorkShop")
+    public void addEnvironmentBaseWorkShop(@RequestParam("file") MultipartFile file) throws IOException{
+        FileInputStream fns=(FileInputStream)file.getInputStream();
+        XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
+        XSSFSheet sheetAt = wb.getSheetAt(0);
+        if(sheetAt==null) {
+            return;
+        }
+
+        String written_by= sheetAt.getRow(0).getCell(2).toString();//第一行第三个单元格 :编写
+        String date="20"+sheetAt.getRow(0).getCell(3).toString().substring(3,5)+"-"+sheetAt.getRow(0).getCell(3).toString().substring(6,8);
+        String zone=sheetAt.getRow(0).getCell(5).toString();//第一行第五个单元格 :区域
+
+        for (int i = 5; i <sheetAt.getRow(1).getLastCellNum() ; i++) {
+            EnvironmentBaseWorkShop environmentBaseWorkShop=new EnvironmentBaseWorkShop();
+            environmentBaseWorkShop.setWorkshop(sheetAt.getRow(1).getCell(i).toString());
+            environmentBaseWorkShop.setZone(zone);
+            environmentBaseWorkShop.setDate(date);
+            environmentBaseWorkShop.setWritten_by(written_by);
+            environmentBaseWorkShop.setWorkshopstability(sheetAt.getRow(2).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setSubstitute(sheetAt.getRow(3).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setExternalaudit(sheetAt.getRow(4).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setBookkeepingmanagement(sheetAt.getRow(5).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setStudyplan(sheetAt.getRow(6).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setLossworkshopstability(sheetAt.getRow(7).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setWorkshopbusiness(sheetAt.getRow(8).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setX6(sheetAt.getRow(9).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setWorkshopsection(sheetAt.getRow(10).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setProgramfiles(sheetAt.getRow(11).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setEcologicalquality(sheetAt.getRow(12).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setLossprogramfiles(sheetAt.getRow(13).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setLossecologicalquality(sheetAt.getRow(14).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setX7(sheetAt.getRow(15).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setFlowpath(sheetAt.getRow(16).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setConsistency(sheetAt.getRow(17).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setX8(sheetAt.getRow(18).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setDai(sheetAt.getRow(19).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setConsistency2(sheetAt.getRow(20).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setX9(sheetAt.getRow(21).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setHealthquthoritygroup(sheetAt.getRow(22).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setHealthquthoritystation(sheetAt.getRow(23).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setLosshealthquthoritygroup(sheetAt.getRow(24).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setLosshealthquthoritystation(sheetAt.getRow(25).getCell(i).getNumericCellValue());
+            environmentBaseWorkShop.setX10(sheetAt.getRow(26).getCell(i).getNumericCellValue());
+            environmentBaseWorkShopService.insertEnvironmentBaseWorkShop(environmentBaseWorkShop);
+
+        }
+    }
+
+    @ApiOperation("区域: 增加基础数据")
+    @PostMapping(value = "/addEnvironmentBaseZone")
+    public void addEnvironmentBaseZone(@RequestParam("file") MultipartFile file) throws IOException{
+        FileInputStream fns=(FileInputStream)file.getInputStream();
+        XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
+        XSSFSheet sheetAt = wb.getSheetAt(0);
+        if(sheetAt==null) {
+            return;
+        }
+
+        String written_by= sheetAt.getRow(0).getCell(2).toString();//第一行第三个单元格 :编写
+        String date="20"+sheetAt.getRow(0).getCell(3).toString().substring(3,5)+"-"+sheetAt.getRow(0).getCell(3).toString().substring(6,8);
+
+        for (int i = 5; i <sheetAt.getRow(1).getLastCellNum() ; i++) {
+            EnvironmentBaseZone environmentBaseZone=new EnvironmentBaseZone();
+            environmentBaseZone.setZone(sheetAt.getRow(1).getCell(i).toString());
+            environmentBaseZone.setDate(date);
+            environmentBaseZone.setWritten_by(written_by);
+            environmentBaseZone.setGraft(sheetAt.getRow(2).getCell(i).getNumericCellValue());
+            environmentBaseZone.setBookkeepingmanagement(sheetAt.getRow(3).getCell(i).getNumericCellValue());
+            environmentBaseZone.setStudyplan(sheetAt.getRow(4).getCell(i).getNumericCellValue());
+            environmentBaseZone.setExternalaudit(sheetAt.getRow(5).getCell(i).getNumericCellValue());
+            environmentBaseZone.setSubstitute(sheetAt.getRow(6).getCell(i).getNumericCellValue());
+            environmentBaseZone.setLosszonestability(sheetAt.getRow(7).getCell(i).getNumericCellValue());
+            environmentBaseZone.setX11(sheetAt.getRow(8).getCell(i).getNumericCellValue());
+            environmentBaseZone.setZonesection(sheetAt.getRow(9).getCell(i).getNumericCellValue());
+            environmentBaseZone.setConsistency(sheetAt.getRow(10).getCell(i).getNumericCellValue());
+            environmentBaseZone.setProgramfiles(sheetAt.getRow(11).getCell(i).getNumericCellValue());
+            environmentBaseZone.setEcologicalquality(sheetAt.getRow(12).getCell(i).getNumericCellValue());
+            environmentBaseZone.setLossprogramfiles(sheetAt.getRow(13).getCell(i).getNumericCellValue());
+            environmentBaseZone.setLossecologicalquality(sheetAt.getRow(14).getCell(i).getNumericCellValue());
+            environmentBaseZone.setX12(sheetAt.getRow(15).getCell(i).getNumericCellValue());
+            environmentBaseZone.setDai(sheetAt.getRow(16).getCell(i).getNumericCellValue());
+            environmentBaseZone.setConsistency2(sheetAt.getRow(17).getCell(i).getNumericCellValue());
+            environmentBaseZone.setX13(sheetAt.getRow(18).getCell(i).getNumericCellValue());
+            environmentBaseZone.setHealthquthorityworkshop(sheetAt.getRow(19).getCell(i).getNumericCellValue());
+            environmentBaseZone.setHealthquthoritygroup(sheetAt.getRow(20).getCell(i).getNumericCellValue());
+            environmentBaseZone.setLosshealthquthorityworkshop(sheetAt.getRow(21).getCell(i).getNumericCellValue());
+            environmentBaseZone.setLosshealthquthoritygroup(sheetAt.getRow(22).getCell(i).getNumericCellValue());
+            environmentBaseZone.setX14(sheetAt.getRow(23).getCell(i).getNumericCellValue());
+
+            environmentBaseZoneService.insertEnrironmentBaseZone(environmentBaseZone);
+        }
     }
 }

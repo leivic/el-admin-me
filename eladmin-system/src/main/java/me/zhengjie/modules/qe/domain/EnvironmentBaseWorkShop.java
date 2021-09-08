@@ -24,7 +24,6 @@ public class EnvironmentBaseWorkShop {
     private String create_by;
     private double workshopstability;
     private double substitute;
-    private double workshoprotation;
     private double externalaudit;
     private double bookkeepingmanagement;
     private double studyplan;

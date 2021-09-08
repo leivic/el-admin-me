@@ -18,7 +18,7 @@ public class EnvironmentBaseGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String group;
+    private String group1; //group是关键字
     private String zone;
     private String date;
     private String written_by;

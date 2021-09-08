@@ -22,7 +22,7 @@ public class EnvironmentBaseStationService {
 
     }
     /*按照id删除对象*/
-    public void deleteEnvironmentBaseStation(int id){
+    public void deleteEnvironmentBaseStationByid(int id){
         environmentBaseStationRepository.deleteById(id);
     }
 
