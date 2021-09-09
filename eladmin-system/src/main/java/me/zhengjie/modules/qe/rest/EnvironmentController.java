@@ -121,6 +121,12 @@ public class EnvironmentController {
         return environmentBaseStationService.findAllEnvironmentBaseStation(page,size,sort);
     }
 
+    @ApiOperation("工位: 按部门查询基础数据")
+    @GetMapping(value = "/findAllEnvironmentBaseStationByZone")
+    public Page<EnvironmentBaseStation> findAllEnvironmentBaseStationByZone(String zone,int page,int size,String sort){
+        return environmentBaseStationService.findAllEnvironmentBaseStationByZone(zone, page, size, sort);
+    }
+
     @ApiOperation("班组: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseGroup")
     public void addEnvironmentBaseGroup(@RequestParam("file") MultipartFile file) throws IOException{

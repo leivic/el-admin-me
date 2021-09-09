@@ -23,6 +23,16 @@ public class EnvironmentBaseStationService {
 
         return environmentBaseStationRepository.findAll(pageable);
     }
+
+    /*按区域查询所有*/
+    public Page<EnvironmentBaseStation> findAllEnvironmentBaseStationByZone(String zone,int page, int size, String sort){ //按部门取数据 实现数据控制
+        PageRequest pageable = PageRequest.of(page-1, size, Sort.Direction.ASC, sort);
+
+
+
+        return environmentBaseStationRepository.findAllByZone(zone,pageable); //findAllByZone 返回的是 Page<EnvironmentBaseStation>类型的,在Dao层的接口就是如此定义
+    }
+
     /*参数为一条数据对象，增加数据 .save()*/
     public void insertEnvironmentBaseStation(EnvironmentBaseStation environmentBaseStation){
         environmentBaseStationRepository.save(environmentBaseStation);
