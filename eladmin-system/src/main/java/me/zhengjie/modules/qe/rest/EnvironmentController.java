@@ -171,6 +171,12 @@ public class EnvironmentController {
         return environmentBaseGroupService.findAllEnvironmentBaseGroup(page,size,sort);
     }
 
+    @ApiOperation("班组: 按部门查询基础数据")
+    @GetMapping(value = "/findAllEnvironmentBaseGroupByZone")
+    public Page<EnvironmentBaseGroup> findAllEnvironmentBaseGroupByZone(String zone,int page,int size,String sort){
+        return environmentBaseGroupService.findAllEnvironmentBaseGroupByZone(zone, page, size, sort);
+    }
+
     /*完成，目前无bug*/
     @ApiOperation("工段: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseWorkShop")
@@ -228,6 +234,11 @@ public class EnvironmentController {
         return environmentBaseWorkShopService.findAllEnvironmentBaseWorkshop(page, size, sort);
     }
 
+    @ApiOperation("工段: 按部门查询基础数据")
+    @GetMapping(value = "/findAllEnvironmentBaseWorkShopByZone")
+    public Page<EnvironmentBaseWorkShop> findAllEnvironmentBaseWorkShopByZone(String zone,int page,int size,String sort){
+        return environmentBaseWorkShopService.findAllEnvironmentBaseWorkShopByZone(zone, page, size, sort);
+    }
 
     @ApiOperation("区域: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseZone")
@@ -279,5 +290,11 @@ public class EnvironmentController {
     @GetMapping(value = "/findAllEnvironmentBaseZone")
     public Page<EnvironmentBaseZone> findAllEnvironmentBaseZone(int page,int size,String sort){
         return environmentBaseZoneService.findAllEnvironmentBaseZone(page, size, sort);
+    }
+
+    @ApiOperation("区域: 按部门查询基础数据")
+    @GetMapping(value = "/findAllEnvironmentZoneByZone")
+    public Page<EnvironmentBaseZone> findAllEnvironmentZoneByZone(String zone,int page,int size,String sort){
+        return environmentBaseZoneService.findAllEnvironmentZoneByZone(zone, page, size, sort);
     }
 }

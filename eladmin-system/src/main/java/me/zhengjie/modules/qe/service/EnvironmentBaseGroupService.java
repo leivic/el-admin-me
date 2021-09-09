@@ -28,4 +28,13 @@ public class EnvironmentBaseGroupService {
 
         return environmentBaseGroupRepository.findAll(pageable);
     }
+
+    /*按区域查询所有*/
+    public Page<EnvironmentBaseGroup> findAllEnvironmentBaseGroupByZone(String zone, int page, int size, String sort){ //按部门取数据 实现数据控制
+        PageRequest pageable = PageRequest.of(page-1, size, Sort.Direction.ASC, sort);
+
+
+
+        return environmentBaseGroupRepository.findAllByZone(zone,pageable);
+    }
 }

@@ -1,6 +1,5 @@
 package me.zhengjie.modules.qe.service;
 
-import me.zhengjie.modules.qe.domain.EnvironmentBaseStation;
 import me.zhengjie.modules.qe.domain.EnvironmentBaseWorkShop;
 import me.zhengjie.modules.qe.repository.EnvironmentBaseWorkShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +30,14 @@ public class EnvironmentBaseWorkShopService {
 
 
         return environmentBaseWorkShopRepository.findAll(pageable);
+    }
+
+    /*按区域查询所有*/
+    public Page<EnvironmentBaseWorkShop> findAllEnvironmentBaseWorkShopByZone(String zone, int page, int size, String sort){ //按部门取数据 实现数据控制
+        PageRequest pageable = PageRequest.of(page-1, size, Sort.Direction.ASC, sort);
+
+
+
+        return environmentBaseWorkShopRepository.findAllByZone(zone,pageable);
     }
 }
