@@ -17,7 +17,7 @@ public class EnvironmentBaseStationService {
 
     /*查询所有*/
     public Page<EnvironmentBaseStation> findAllEnvironmentBaseStation(int page, int size, String sort){ //jpa封装的分页工具 返回EnvironmentBaseStation泛型的page类型
-        PageRequest pageable = PageRequest.of(page, size, Sort.Direction.ASC, sort);// jpa封装的分页工具 第几页 每页有多少 按什么排序
+        PageRequest pageable = PageRequest.of(page-1, size, Sort.Direction.ASC, sort);// jpa封装的分页工具 第几页 每页有多少 按什么排序 //PAGE-1 是因为jpa从0开始，前端从1开始
 
 
 

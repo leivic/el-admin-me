@@ -159,6 +159,12 @@ public class EnvironmentController {
         }
     }
 
+    @ApiOperation("班组: 查询基础数据")
+    @GetMapping(value = "/findAllEnvironmentBaseGroup")
+    public Page<EnvironmentBaseGroup> findAllEnvironmentBaseGroup(int page,int size,String sort){
+        return environmentBaseGroupService.findAllEnvironmentBaseGroup(page,size,sort);
+    }
+
     /*完成，目前无bug*/
     @ApiOperation("工段: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseWorkShop")
@@ -210,6 +216,13 @@ public class EnvironmentController {
         }
     }
 
+    @ApiOperation("工段: 查询基础数据")
+    @GetMapping(value = "/findAllEnvironmentBaseWorkshop")
+    public Page<EnvironmentBaseWorkShop> findAllEnvironmentBaseWorkshop(int page,int size,String sort){
+        return environmentBaseWorkShopService.findAllEnvironmentBaseWorkshop(page, size, sort);
+    }
+
+
     @ApiOperation("区域: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseZone")
     public void addEnvironmentBaseZone(@RequestParam("file") MultipartFile file) throws IOException{
@@ -256,4 +269,9 @@ public class EnvironmentController {
     }
 
 
+    @ApiOperation("区域: 查询基础数据")
+    @GetMapping(value = "/findAllEnvironmentBaseZone")
+    public Page<EnvironmentBaseZone> findAllEnvironmentBaseZone(int page,int size,String sort){
+        return environmentBaseZoneService.findAllEnvironmentBaseZone(page, size, sort);
+    }
 }
