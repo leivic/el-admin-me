@@ -40,4 +40,9 @@ public class EnvironmentBaseWorkShopService {
 
         return environmentBaseWorkShopRepository.findAllByZone(zone,pageable);
     }
+
+    /*按区域和月份查找所有*/
+    public List<EnvironmentBaseWorkShop> findAllByZoneAndYear(String zone,String date){
+        return environmentBaseWorkShopRepository.findAllByZoneAndYear(zone, date);
+    }
 }
