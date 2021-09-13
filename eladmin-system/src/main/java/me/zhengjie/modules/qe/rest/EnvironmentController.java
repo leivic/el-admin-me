@@ -301,7 +301,7 @@ public class EnvironmentController {
         return environmentBaseZoneService.findAllEnvironmentZoneByZone(zone, page, size, sort);
     }
 
-    @ApiOperation("区域/工段: 获取系统完整图表数据 ") //一定不能出错的地方 数据库中的日期格式，车间格式
+    @ApiOperation("区域/工段: 获取系统完整图表数据 ") //一定不能出错的地方 数据库中的日期格式，车间格
     @GetMapping(value = "/getthisYearEnvironmentSystem")
     public ArrayList<EnvironmentSystem> getthisYearEnvironmentSystem(String year,String workshoporzone) {
         ArrayList<EnvironmentSystem> result=new ArrayList<>();
@@ -379,7 +379,7 @@ public class EnvironmentController {
                     environmentSystem.setZongzhuang(getZoneX12("总装车间",date));
                     environmentSystem.setJijia(getZoneX12("机加车间",date));
                     environmentSystem.setZhuangpei(getZoneX12("装配车间",date));
-                    environmentSystem.setTotal((getZoneX12("冲压车间",date)+getWorkshopX7("车身车间",date)+getWorkshopX7("涂装车间",date)+getWorkshopX7("总装车间",date)+getWorkshopX7("机加车间",date)+getWorkshopX7("装配车间",date))/6);
+                    environmentSystem.setTotal((getZoneX12("冲压车间",date)+getZoneX12("车身车间",date)+getZoneX12("涂装车间",date)+getZoneX12("总装车间",date)+getZoneX12("机加车间",date)+getZoneX12("装配车间",date))/6);
                     result.add(i-1,environmentSystem);//往最后要返回的List集里面添加这一条list
                 }
             }else{ //如果不是本年的数据，默认该年有12个月份
