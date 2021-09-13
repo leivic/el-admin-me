@@ -301,7 +301,7 @@ public class EnvironmentController {
         return environmentBaseZoneService.findAllEnvironmentZoneByZone(zone, page, size, sort);
     }
 
-    @ApiOperation("区域/工段: 获取系统完整图表数据 ")
+    @ApiOperation("区域/工段: 获取系统完整图表数据 ") //一定不能出错的地方 数据库中的日期格式，车间格式
     @GetMapping(value = "/getthisYearEnvironmentSystem")
     public ArrayList<EnvironmentSystem> getthisYearEnvironmentSystem(String year,String workshoporzone) {
         ArrayList<EnvironmentSystem> result=new ArrayList<>();
@@ -319,14 +319,14 @@ public class EnvironmentController {
             int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
             for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
                 if(i<10){
-                    date=now.get(Calendar.YEAR)+"-0"+nowMonth;
+                    date=now.get(Calendar.YEAR)+"-0"+i;
                 }
                 else {
-                    date=now.get(Calendar.YEAR)+"-"+nowMonth;
+                    date=now.get(Calendar.YEAR)+"-"+i;
                 }
 
                 EnvironmentSystem environmentSystem=new EnvironmentSystem();//一条数据就是一个月的数据
-                environmentSystem.setDate(now.get(Calendar.YEAR)+"-"+i);
+                environmentSystem.setDate(date);
                 environmentSystem.setChognya(getWorkshopX7("冲压车间",date));//车间名和日期格式不能错，否则出现bug
                 environmentSystem.setCheshen(getWorkshopX7("车身车间",date));
                 environmentSystem.setTuzhuang(getWorkshopX7("涂装车间",date));
@@ -340,14 +340,14 @@ public class EnvironmentController {
             int nowMonth=12;
             for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
                 if(i<10){
-                    date=now.get(Calendar.YEAR)+"-0"+nowMonth;
+                    date=year+"-0"+i;
                 }
                 else {
-                    date=now.get(Calendar.YEAR)+"-"+nowMonth;
+                    date=year+"-"+i;
                 }
 
                 EnvironmentSystem environmentSystem=new EnvironmentSystem();//一条数据就是一个月的数据
-                environmentSystem.setDate(now.get(Calendar.YEAR)+"-"+i);
+                environmentSystem.setDate(date);
                 environmentSystem.setChognya(getWorkshopX7("冲压车间",date));//车间名和日期格式不能错，否则出现bug
                 environmentSystem.setCheshen(getWorkshopX7("车身车间",date));
                 environmentSystem.setTuzhuang(getWorkshopX7("涂装车间",date));
@@ -361,38 +361,39 @@ public class EnvironmentController {
        }
        else{ //如果不是工段，就采用区域的方法
             if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+                System.out.println("当前是本年区域的数据");
                 int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
                 for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
                     if(i<10){
-                        date=now.get(Calendar.YEAR)+"-0"+nowMonth;
+                        date=now.get(Calendar.YEAR)+"-0"+i;
                     }
                     else {
-                        date=now.get(Calendar.YEAR)+"-"+nowMonth;
+                        date=now.get(Calendar.YEAR)+"-"+i;
                     }
 
                     EnvironmentSystem environmentSystem=new EnvironmentSystem();//一条数据就是一个月的数据
-                    environmentSystem.setDate(now.get(Calendar.YEAR)+"-"+i);
-                    environmentSystem.setChognya(getWorkshopX7("冲压车间",date));//车间名和日期格式不能错，否则出现bug
-                    environmentSystem.setCheshen(getWorkshopX7("车身车间",date));
-                    environmentSystem.setTuzhuang(getWorkshopX7("涂装车间",date));
-                    environmentSystem.setZongzhuang(getWorkshopX7("总装车间",date));
-                    environmentSystem.setJijia(getWorkshopX7("机加车间",date));
-                    environmentSystem.setZhuangpei(getWorkshopX7("装配车间",date));
-                    environmentSystem.setTotal((getWorkshopX7("冲压车间",date)+getWorkshopX7("车身车间",date)+getWorkshopX7("涂装车间",date)+getWorkshopX7("总装车间",date)+getWorkshopX7("机加车间",date)+getWorkshopX7("装配车间",date))/6);
+                    environmentSystem.setDate(date);
+                    environmentSystem.setChognya(getZoneX12("冲压车间",date));//车间名和日期格式不能错，否则出现bug
+                    environmentSystem.setCheshen(getZoneX12("车身车间",date));
+                    environmentSystem.setTuzhuang(getZoneX12("涂装车间",date));
+                    environmentSystem.setZongzhuang(getZoneX12("总装车间",date));
+                    environmentSystem.setJijia(getZoneX12("机加车间",date));
+                    environmentSystem.setZhuangpei(getZoneX12("装配车间",date));
+                    environmentSystem.setTotal((getZoneX12("冲压车间",date)+getWorkshopX7("车身车间",date)+getWorkshopX7("涂装车间",date)+getWorkshopX7("总装车间",date)+getWorkshopX7("机加车间",date)+getWorkshopX7("装配车间",date))/6);
                     result.add(i-1,environmentSystem);//往最后要返回的List集里面添加这一条list
                 }
             }else{ //如果不是本年的数据，默认该年有12个月份
                 int nowMonth=12;
                 for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
                     if(i<10){
-                        date=now.get(Calendar.YEAR)+"-0"+nowMonth;
+                        date=year+"-0"+i;
                     }
                     else {
-                        date=now.get(Calendar.YEAR)+"-"+nowMonth;
+                        date=year+"-"+i;
                     }
 
                     EnvironmentSystem environmentSystem=new EnvironmentSystem();//一条数据就是一个月的数据
-                    environmentSystem.setDate(now.get(Calendar.YEAR)+"-"+i);
+                    environmentSystem.setDate(date);
                     environmentSystem.setChognya(getZoneX12("冲压车间",date));//车间名和日期格式不能错，否则出现bug
                     environmentSystem.setCheshen(getZoneX12("车身车间",date));
                     environmentSystem.setTuzhuang(getZoneX12("涂装车间",date));
