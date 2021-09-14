@@ -131,6 +131,48 @@ public class EnvironmentController {
         return environmentBaseStationService.findAllEnvironmentBaseStationByZone(zone, page, size, sort);
     }
 
+    @ApiOperation("工位: 按年份和区域查找工位的健康水平数据") /*这个写法出了之前的各式不能出问题外，*/
+    @GetMapping(value = "/findEnvironmentBaseStationHealthy")
+    public ArrayList findEnvironmentBaseStationHealthy(String year,String zone){ //这里确实是传入年
+        ArrayList result =new ArrayList(); //不返回一个对象，仅返回一个数据库中x1的数组，最多12个 是今年内每个月x1的平均值
+        Calendar now=Calendar.getInstance();
+        String date;
+
+        if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+
+            int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=now.get(Calendar.YEAR)+"-0"+i;
+                }
+                else {
+                    date=now.get(Calendar.YEAR)+"-"+i;
+                }
+
+                double x1=getStationX1(zone,date); //这里传入的是月份 2021-07这样 每个月获得啦就填入数组，为0也填入
+                result.add(i-1,x1);
+            }
+        }else{ //如果不是本年的数据，默认该年有12个月份
+            int nowMonth=12;
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=year+"-0"+i;
+                }
+                else {
+                    date=year+"-"+i;
+                }
+
+                double x1=getStationX1(zone,date); //这里传入的是月份 2021-07这样
+                result.add(i-1,x1);
+            }}
+
+        return result;
+    }
+    /*  "工位: 按年份查找工位的健康水平数据 " 获取列表平均值后的x1*/
+    public Double getStationX1(String zone,String date){ //几月的某区域的健康水平的平均值
+        return environmentBaseStationService.findAllByZoneAnddate(zone,date).stream().mapToDouble(EnvironmentBaseStation::getX1).average().orElse(0D);
+    }
+
     @ApiOperation("班组: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseGroup")
     public void addEnvironmentBaseGroup(@RequestParam("file") MultipartFile file) throws IOException{
@@ -179,6 +221,49 @@ public class EnvironmentController {
     @GetMapping(value = "/findAllEnvironmentBaseGroupByZone")
     public Page<EnvironmentBaseGroup> findAllEnvironmentBaseGroupByZone(String zone,int page,int size,String sort){
         return environmentBaseGroupService.findAllEnvironmentBaseGroupByZone(zone, page, size, sort);
+    }
+
+    @ApiOperation("班组: 按年份和区域查找班组的健康水平数据")
+    @GetMapping(value = "/findEnvironmentBaseGroupHealthy")
+    public ArrayList findEnvironmentBaseGroupHealthy(String year,String zone){ //这里确实是传入年
+        ArrayList result =new ArrayList(); //不返回一个对象，仅返回一个数据库中x1的数组，最多12个 是今年内每个月x1的平均值
+        Calendar now=Calendar.getInstance();
+        String date;
+
+        if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+
+            int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=now.get(Calendar.YEAR)+"-0"+i;
+                }
+                else {
+                    date=now.get(Calendar.YEAR)+"-"+i;
+                }
+
+                double x3=getGroupX3(zone,date); //这里传入的是月份 2021-07这样
+                result.add(i-1,x3);
+            }
+        }else{ //如果不是本年的数据，默认该年有12个月份
+            int nowMonth=12;
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=year+"-0"+i;
+                }
+                else {
+                    date=year+"-"+i;
+                }
+
+                double x3=getGroupX3(zone,date); //这里传入的是月份 2021-07这样
+                result.add(i-1,x3);
+            }}
+
+        return result;
+    }
+
+    /*  "班组: 按年份查找班组的健康水平数据 " 获取列表平均值后的x3*/
+    public Double getGroupX3(String zone,String date){ //几月的某区域的健康水平的平均值
+        return environmentBaseGroupService.findAllByZoneAnddate(zone,date).stream().mapToDouble(EnvironmentBaseGroup::getX3).average().orElse(0D);
     }
 
     /*完成，目前无bug*/
@@ -243,6 +328,51 @@ public class EnvironmentController {
     public Page<EnvironmentBaseWorkShop> findAllEnvironmentBaseWorkShopByZone(String zone,int page,int size,String sort){
         return environmentBaseWorkShopService.findAllEnvironmentBaseWorkShopByZone(zone, page, size, sort);
     }
+
+    @ApiOperation("工段: 按年份和区域查找工段的健康水平数据")
+    @GetMapping(value = "/findEnvironmentBaseWorkshopHealthy")
+    public ArrayList findEnvironmentBaseWorkshopHealthy(String year,String zone){ //这里确实是传入年
+        ArrayList result =new ArrayList(); //不返回一个对象，仅返回一个数据库中x1的数组，最多12个 是今年内每个月x1的平均值
+        Calendar now=Calendar.getInstance();
+        String date;
+
+        if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+
+            int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=now.get(Calendar.YEAR)+"-0"+i;
+                }
+                else {
+                    date=now.get(Calendar.YEAR)+"-"+i;
+                }
+
+                double x6=getWorkshopX6(zone,date); //这里传入的是月份 2021-07这样
+                result.add(i-1,x6);
+            }
+        }else{ //如果不是本年的数据，默认该年有12个月份
+            int nowMonth=12;
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=year+"-0"+i;
+                }
+                else {
+                    date=year+"-"+i;
+                }
+
+                double x6=getWorkshopX6(zone,date); //这里传入的是月份 2021-07这样
+                result.add(i-1,x6);
+            }}
+
+        return result;
+    }
+    /*  "工段: 按年份和区域查找工段的健康水平数据 " 获取列表平均值后的x6*/
+    public Double getWorkshopX6(String zone,String date){ //几年几月的某工段的健康水平的平均值
+        return environmentBaseWorkShopService.findAllByZoneAndYear(zone,date).stream().mapToDouble(EnvironmentBaseWorkShop::getX6).average().orElse(0D);
+    }
+
+
+
 
     @ApiOperation("区域: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseZone")

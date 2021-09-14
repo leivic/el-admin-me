@@ -15,4 +15,6 @@ public interface EnvironmentBaseWorkShopRepository extends JpaRepository<Environ
 
     @Query(value = "select * from environment_base_workshop  where " +"zone = :zone and"+" date = :date",nativeQuery = true)
     List<EnvironmentBaseWorkShop> findAllByZoneAndYear(@Param("zone") String zone,@Param("date") String date);//按区域和年获取数据
+
+
 }

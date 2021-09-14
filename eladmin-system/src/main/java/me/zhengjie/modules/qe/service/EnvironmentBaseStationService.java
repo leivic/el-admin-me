@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 
 @Service
@@ -44,5 +45,10 @@ public class EnvironmentBaseStationService {
     }
 
     /*重新排序id*/
+
+    /*按区域和月份查找所有*/
+    public List<EnvironmentBaseStation> findAllByZoneAnddate(String zone, String date){
+        return environmentBaseStationRepository.findAllByZoneAndYear(zone, date);
+    }
 
 }
