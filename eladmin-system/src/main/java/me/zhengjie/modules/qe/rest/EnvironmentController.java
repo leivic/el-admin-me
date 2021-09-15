@@ -726,4 +726,171 @@ public class EnvironmentController {
     public Double getZoneX13(String zone,String date){
         return environmentBaseZoneService.findAllByZoneAndYear(zone,date).stream().mapToDouble(EnvironmentBaseZone::getX13).average().orElse(0D); //车间名和日期格式不能错，x12不能为空
     }
+
+
+    @ApiOperation("工段/班组/工位: 获取低碳精益图表数据 ") //一定不能出错的地方 数据库中的日期格式，车间格
+    @GetMapping(value = "/getthisYearEnvironmentLowcarbon")
+    public ArrayList<EnvironmentSystem> getthisYearEnvironmentLowcarbon(String year,String workshoporzone) {
+        ArrayList<EnvironmentSystem> result=new ArrayList<>();
+
+        Calendar now=Calendar.getInstance();
+        String date;
+        /*
+        int nowMonth=(now.get(Calendar.MONTH))+1;//获取当前月份
+        int nowYear=now.get(Calendar.YEAR);//获取当前年
+
+        System.out.println(environmentBaseWorkShopService.findAllByZoneAndYear("车身车间",nowYear+"-0"+nowMonth));
+        */
+        if(workshoporzone.equals("工段")){ //如果是区域就采用区域的方法
+            if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+                int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+                for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                    if(i<10){
+                        date=now.get(Calendar.YEAR)+"-0"+i;
+                    }
+                    else {
+                        date=now.get(Calendar.YEAR)+"-"+i;
+                    }
+
+                    EnvironmentSystem environmentSystem=new EnvironmentSystem();//一条数据就是一个月的数据
+                    environmentSystem.setDate(date);
+                    environmentSystem.setChognya(getWorkshopX8("冲压车间",date));//车间名和日期格式不能错，否则出现bug
+                    environmentSystem.setCheshen(getWorkshopX8("车身车间",date));
+                    environmentSystem.setTuzhuang(getWorkshopX8("涂装车间",date));
+                    environmentSystem.setZongzhuang(getWorkshopX8("总装车间",date));
+                    environmentSystem.setJijia(getWorkshopX8("机加车间",date));
+                    environmentSystem.setZhuangpei(getWorkshopX8("装配车间",date));
+                    environmentSystem.setTotal((getWorkshopX8("冲压车间",date)+getWorkshopX8("车身车间",date)+getWorkshopX8("涂装车间",date)+getWorkshopX8("总装车间",date)+getWorkshopX8("机加车间",date)+getWorkshopX8("装配车间",date))/6);
+                    result.add(i-1,environmentSystem);//往最后要返回的List集里面添加这一条list
+                }
+            }else{ //如果不是本年的数据，默认该年有12个月份
+                int nowMonth=12;
+                for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                    if(i<10){
+                        date=year+"-0"+i;
+                    }
+                    else {
+                        date=year+"-"+i;
+                    }
+
+                    EnvironmentSystem environmentSystem=new EnvironmentSystem();//一条数据就是一个月的数据
+                    environmentSystem.setDate(date);
+                    environmentSystem.setChognya(getWorkshopX8("冲压车间",date));//车间名和日期格式不能错，否则出现bug
+                    environmentSystem.setCheshen(getWorkshopX8("车身车间",date));
+                    environmentSystem.setTuzhuang(getWorkshopX8("涂装车间",date));
+                    environmentSystem.setZongzhuang(getWorkshopX8("总装车间",date));
+                    environmentSystem.setJijia(getWorkshopX8("机加车间",date));
+                    environmentSystem.setZhuangpei(getWorkshopX8("装配车间",date));
+                    environmentSystem.setTotal((getWorkshopX8("冲压车间",date)+getWorkshopX8("车身车间",date)+getWorkshopX8("涂装车间",date)+getWorkshopX8("总装车间",date)+getWorkshopX8("机加车间",date)+getWorkshopX8("装配车间",date))/6);
+                    result.add(i-1,environmentSystem);//往最后要返回的List集里面添加这一条list
+                }
+            }
+        }
+        else if (workshoporzone.equals("班组")){ //如果不是工段，是班组，就采用班组的方法
+            if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数
+                int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+                for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                    if(i<10){
+                        date=now.get(Calendar.YEAR)+"-0"+i;
+                    }
+                    else {
+                        date=now.get(Calendar.YEAR)+"-"+i;
+                    }
+
+                    EnvironmentSystem environmentSystem=new EnvironmentSystem();//一条数据就是一个月的数据
+                    environmentSystem.setDate(date);
+                    environmentSystem.setChognya(getGroupX4("冲压车间",date));//车间名和日期格式不能错，否则出现bug
+                    environmentSystem.setCheshen(getGroupX4("车身车间",date));
+                    environmentSystem.setTuzhuang(getGroupX4("涂装车间",date));
+                    environmentSystem.setZongzhuang(getGroupX4("总装车间",date));
+                    environmentSystem.setJijia(getGroupX4("机加车间",date));
+                    environmentSystem.setZhuangpei(getGroupX4("装配车间",date));
+                    environmentSystem.setTotal((getGroupX4("冲压车间",date)+getGroupX4("车身车间",date)+getGroupX4("涂装车间",date)+getGroupX4("总装车间",date)+getGroupX4("机加车间",date)+getGroupX4("装配车间",date))/6);
+                    result.add(i-1,environmentSystem);//往最后要返回的List集里面添加这一条list
+                }
+            }else{ //如果不是本年的数据，默认该年有12个月份
+                int nowMonth=12;
+                for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                    if(i<10){
+                        date=year+"-0"+i;
+                    }
+                    else {
+                        date=year+"-"+i;
+                    }
+
+                    EnvironmentSystem environmentSystem=new EnvironmentSystem();//一条数据就是一个月的数据
+                    environmentSystem.setDate(date);
+                    environmentSystem.setChognya(getGroupX4("冲压车间",date));//车间名和日期格式不能错，否则出现bug
+                    environmentSystem.setCheshen(getGroupX4("车身车间",date));
+                    environmentSystem.setTuzhuang(getGroupX4("涂装车间",date));
+                    environmentSystem.setZongzhuang(getGroupX4("总装车间",date));
+                    environmentSystem.setJijia(getGroupX4("机加车间",date));
+                    environmentSystem.setZhuangpei(getGroupX4("装配车间",date));
+                    environmentSystem.setTotal((getGroupX4("冲压车间",date)+getGroupX4("车身车间",date)+getGroupX4("涂装车间",date)+getGroupX4("总装车间",date)+getGroupX4("机加车间",date)+getGroupX4("装配车间",date))/6);
+                    result.add(i-1,environmentSystem);//往最后要返回的List集里面添加这一条list
+                }
+            }
+        }
+        else if (workshoporzone.equals("工位")){ //如果是工位
+            if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数
+                int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+                for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                    if(i<10){
+                        date=now.get(Calendar.YEAR)+"-0"+i;
+                    }
+                    else {
+                        date=now.get(Calendar.YEAR)+"-"+i;
+                    }
+
+                    EnvironmentSystem environmentSystem=new EnvironmentSystem();//一条数据就是一个月的数据
+                    environmentSystem.setDate(date);
+                    environmentSystem.setChognya(getStationX2("冲压车间",date));//车间名和日期格式不能错，否则出现bug
+                    environmentSystem.setCheshen(getStationX2("车身车间",date));
+                    environmentSystem.setTuzhuang(getStationX2("涂装车间",date));
+                    environmentSystem.setZongzhuang(getStationX2("总装车间",date));
+                    environmentSystem.setJijia(getStationX2("机加车间",date));
+                    environmentSystem.setZhuangpei(getStationX2("装配车间",date));
+                    environmentSystem.setTotal((getStationX2("冲压车间",date)+getStationX2("车身车间",date)+getStationX2("涂装车间",date)+getStationX2("总装车间",date)+getStationX2("机加车间",date)+getStationX2("装配车间",date))/6);
+                    result.add(i-1,environmentSystem);//往最后要返回的List集里面添加这一条list
+                }
+            }else{ //如果不是本年的数据，默认该年有12个月份
+                int nowMonth=12;
+                for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                    if(i<10){
+                        date=year+"-0"+i;
+                    }
+                    else {
+                        date=year+"-"+i;
+                    }
+
+                    EnvironmentSystem environmentSystem=new EnvironmentSystem();//一条数据就是一个月的数据
+                    environmentSystem.setDate(date);
+                    environmentSystem.setChognya(getStationX2("冲压车间",date));//车间名和日期格式不能错，否则出现bug
+                    environmentSystem.setCheshen(getStationX2("车身车间",date));
+                    environmentSystem.setTuzhuang(getStationX2("涂装车间",date));
+                    environmentSystem.setZongzhuang(getStationX2("总装车间",date));
+                    environmentSystem.setJijia(getStationX2("机加车间",date));
+                    environmentSystem.setZhuangpei(getStationX2("装配车间",date));
+                    environmentSystem.setTotal((getStationX2("冲压车间",date)+getStationX2("车身车间",date)+getStationX2("涂装车间",date)+getStationX2("总装车间",date)+getStationX2("机加车间",date)+getStationX2("装配车间",date))/6);
+                    result.add(i-1,environmentSystem);//往最后要返回的List集里面添加这一条list
+                }
+            }
+        }
+        return result;
+    }
+
+    /*  "工段/班组/工位: 获取低碳精益图表数据 " 获取列表平均值后的x9*/
+    public Double getWorkshopX8(String zone,String date){
+        return environmentBaseWorkShopService.findAllByZoneAndYear(zone,date).stream().mapToDouble(EnvironmentBaseWorkShop::getX8).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    /*  "工段/班组/工位: 获取低碳精益图表数据 " 获取列表平均值后的x4*/
+    public Double getGroupX4(String zone,String date){
+        return environmentBaseGroupService.findAllByZoneAnddate(zone,date).stream().mapToDouble(EnvironmentBaseGroup::getX4).average().orElse(0D);
+    }
+
+    /*  "工段/班组/工位: 获取低碳精益图表数据 " 获取列表平均值后的x4*/
+    public Double getStationX2(String zone,String date){
+        return environmentBaseStationService.findAllByZoneAnddate(zone,date).stream().mapToDouble(EnvironmentBaseStation::getX2).average().orElse(0D);
+    }
 }
