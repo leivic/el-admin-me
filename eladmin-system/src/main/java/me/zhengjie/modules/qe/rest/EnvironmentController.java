@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.qe.domain.*;
 import me.zhengjie.modules.qe.polo.EnvironmentHealthZone;
+import me.zhengjie.modules.qe.polo.EnvironmentItem;
 import me.zhengjie.modules.qe.polo.EnvironmentSystem;
 import me.zhengjie.modules.qe.polo.GongWeiFuHeLastData;
 import me.zhengjie.modules.qe.service.*;
@@ -892,5 +893,56 @@ public class EnvironmentController {
     /*  "工段/班组/工位: 获取低碳精益图表数据 " 获取列表平均值后的x4*/
     public Double getStationX2(String zone,String date){
         return environmentBaseStationService.findAllByZoneAnddate(zone,date).stream().mapToDouble(EnvironmentBaseStation::getX2).average().orElse(0D);
+    }
+
+    @ApiOperation("工位: 获取每个工位健康水平数据 ")
+    @GetMapping(value = "/getStationByZoneAndDate")
+    public List<EnvironmentItem> getStationByZoneAndDate(String zone,String date){
+        List<EnvironmentItem> environmentItemList=new ArrayList<>(); //先新建Environment类型的列表，后面往这个列表里一项项的添加
+
+            List<EnvironmentBaseStation> environmentBaseStationList= environmentBaseStationService.findAllByZoneAnddate(zone, date);
+            for (int i = 0; i <environmentBaseStationList.size(); i++) {
+                EnvironmentItem environmentItem=new EnvironmentItem();
+                environmentItem.setItem(environmentBaseStationList.get(i).getStation());
+                environmentItem.setFraction(environmentBaseStationList.get(i).getX1());
+                environmentItemList.add(i,environmentItem);
+            }
+
+
+        return environmentItemList;
+    }
+
+    @ApiOperation("班组: 获取每个班组健康水平数据 ")
+    @GetMapping(value = "/getGroupByZoneAndDate")
+    public List<EnvironmentItem> getGroupByZoneAndDate(String zone,String date){
+        List<EnvironmentItem> environmentItemList=new ArrayList<>(); //先新建Environment类型的列表，后面往这个列表里一项项的添加
+
+        List<EnvironmentBaseGroup> environmentBaseGroupList= environmentBaseGroupService.findAllByZoneAnddate(zone, date);
+        for (int i = 0; i <environmentBaseGroupList.size(); i++) {
+            EnvironmentItem environmentItem=new EnvironmentItem();
+            environmentItem.setItem(environmentBaseGroupList.get(i).getGroup1());
+            environmentItem.setFraction(environmentBaseGroupList.get(i).getX3());
+            environmentItemList.add(i,environmentItem);
+        }
+
+
+        return environmentItemList;
+    }
+
+    @ApiOperation("工段: 获取每个工段健康水平数据 ")
+    @GetMapping(value = "/getWorkShopByZoneAndDate")
+    public List<EnvironmentItem> getWorkShopByZoneAndDate(String zone,String date){
+        List<EnvironmentItem> environmentItemList=new ArrayList<>(); //先新建Environment类型的列表，后面往这个列表里一项项的添加
+
+        List<EnvironmentBaseWorkShop> environmentBaseWorkShopList= environmentBaseWorkShopService.findAllByZoneAndYear(zone, date);
+        for (int i = 0; i <environmentBaseWorkShopList.size(); i++) {
+            EnvironmentItem environmentItem=new EnvironmentItem();
+            environmentItem.setItem(environmentBaseWorkShopList.get(i).getWorkshop());
+            environmentItem.setFraction(environmentBaseWorkShopList.get(i).getX6());
+            environmentItemList.add(i,environmentItem);
+        }
+
+
+        return environmentItemList;
     }
 }

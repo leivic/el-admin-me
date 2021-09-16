@@ -18,4 +18,6 @@ public interface EnvironmentBaseStationRepository extends JpaRepository<Environm
     @Query(value = "select * from environment_base_station  where " +"zone = :zone and"+" date = :date",nativeQuery = true)
     List<EnvironmentBaseStation> findAllByZoneAndYear(@Param("zone") String zone, @Param("date") String date);
 
+    @Query(value = "select station,x1 from environment_base_station  where " +"zone = :zone and"+" date = :date",nativeQuery = true)
+    List<EnvironmentBaseStation> findStationAndX1ByDateAndZone(@Param("zone") String zone, @Param("date") String date);
 }
