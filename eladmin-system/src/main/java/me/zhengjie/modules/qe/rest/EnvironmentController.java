@@ -267,6 +267,50 @@ public class EnvironmentController {
         return environmentBaseGroupService.findAllByZoneAnddate(zone,date).stream().mapToDouble(EnvironmentBaseGroup::getX3).average().orElse(0D);
     }
 
+
+    @ApiOperation("班组: 按年份和区域查找班组的均衡发展平均数据")
+    @GetMapping(value = "/findEnvironmentBaseGroupDelevop")
+    public ArrayList findEnvironmentBaseGroupDelevop(String year,String zone){ //这里确实是传入年
+        ArrayList result =new ArrayList(); //不返回一个对象，仅返回一个数据库中x1的数组，最多12个 是今年内每个月x1的平均值
+        Calendar now=Calendar.getInstance();
+        String date;
+
+        if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+
+            int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=now.get(Calendar.YEAR)+"-0"+i;
+                }
+                else {
+                    date=now.get(Calendar.YEAR)+"-"+i;
+                }
+
+                double x3=getGroupX5(zone,date); //这里传入的是月份 2021-07这样
+                result.add(i-1,x3);
+            }
+        }else{ //如果不是本年的数据，默认该年有12个月份
+            int nowMonth=12;
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=year+"-0"+i;
+                }
+                else {
+                    date=year+"-"+i;
+                }
+
+                double x3=getGroupX5(zone,date); //这里传入的是月份 2021-07这样
+                result.add(i-1,x3);
+            }}
+
+        return result;
+    }
+
+    /*  "班组: 按年份查找班组的健康水平数据 " 获取列表平均值后的x3*/
+    public Double getGroupX5(String zone,String date){ //几月的某区域的健康水平的平均值
+        return environmentBaseGroupService.findAllByZoneAnddate(zone,date).stream().mapToDouble(EnvironmentBaseGroup::getX5).average().orElse(0D);
+    }
+
     /*完成，目前无bug*/
     @ApiOperation("工段: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseWorkShop")
@@ -372,8 +416,48 @@ public class EnvironmentController {
         return environmentBaseWorkShopService.findAllByZoneAndYear(zone,date).stream().mapToDouble(EnvironmentBaseWorkShop::getX6).average().orElse(0D);
     }
 
+    @ApiOperation("工段: 按年份和区域查找工段的均衡发展数据")
+    @GetMapping(value = "/findEnvironmentBaseWorkshopDelevop")
+    public ArrayList findEnvironmentBaseWorkshopDelevop(String year,String zone){ //这里确实是传入年
+        ArrayList result =new ArrayList(); //不返回一个对象，仅返回一个数据库中x1的数组，最多12个 是今年内每个月x1的平均值
+        Calendar now=Calendar.getInstance();
+        String date;
 
+        if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
 
+            int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=now.get(Calendar.YEAR)+"-0"+i;
+                }
+                else {
+                    date=now.get(Calendar.YEAR)+"-"+i;
+                }
+
+                double x6=getWorkshopX10(zone,date); //这里传入的是月份 2021-07这样
+                result.add(i-1,x6);
+            }
+        }else{ //如果不是本年的数据，默认该年有12个月份
+            int nowMonth=12;
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=year+"-0"+i;
+                }
+                else {
+                    date=year+"-"+i;
+                }
+
+                double x6=getWorkshopX10(zone,date); //这里传入的是月份 2021-07这样
+                result.add(i-1,x6);
+            }}
+
+        return result;
+    }
+
+    /*  "工段: 按年份和区域查找工段的健康水平数据 " 获取列表平均值后的x6*/
+    public Double getWorkshopX10(String zone,String date){ //几年几月的某工段的健康水平的平均值
+        return environmentBaseWorkShopService.findAllByZoneAndYear(zone,date).stream().mapToDouble(EnvironmentBaseWorkShop::getX10).average().orElse(0D);
+    }
 
     @ApiOperation("区域: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseZone")
@@ -579,12 +663,12 @@ public class EnvironmentController {
 
                 EnvironmentHealthZone environmentHealthZone=new EnvironmentHealthZone();
                 environmentHealthZone.setDate(date);
-                environmentHealthZone.setChongya(getZoneX12("冲压车间",date));//车间名和日期格式不能错，否则出现bug
-                environmentHealthZone.setCheshen(getZoneX12("车身车间",date));
-                environmentHealthZone.setTuzhuang(getZoneX12("涂装车间",date));
-                environmentHealthZone.setZongzhuang(getZoneX12("总装车间",date));
-                environmentHealthZone.setJijia(getZoneX12("机加车间",date));
-                environmentHealthZone.setZhuangpei(getZoneX12("装配车间",date));
+                environmentHealthZone.setChongya(getZoneX11("冲压车间",date));//车间名和日期格式不能错，否则出现bug
+                environmentHealthZone.setCheshen(getZoneX11("车身车间",date));
+                environmentHealthZone.setTuzhuang(getZoneX11("涂装车间",date));
+                environmentHealthZone.setZongzhuang(getZoneX11("总装车间",date));
+                environmentHealthZone.setJijia(getZoneX11("机加车间",date));
+                environmentHealthZone.setZhuangpei(getZoneX11("装配车间",date));
                 result.add(i-1,environmentHealthZone);//往最后要返回的List集里面添加这一条list
             }}
 
@@ -944,5 +1028,64 @@ public class EnvironmentController {
 
 
         return environmentItemList;
+    }
+
+
+
+    @ApiOperation("区域: 获取区域均衡发展图表数据 ") //一定不能出错的地方 数据库中的日期格式，车间格
+    @GetMapping(value = "/getthisYearEnvironmentDevelopZone")
+    public ArrayList<EnvironmentHealthZone> getthisYearEnvironmentDevelopZone(String year){
+        ArrayList<EnvironmentHealthZone> result=new ArrayList<>();
+        Calendar now=Calendar.getInstance();
+        String date;
+        if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+
+            int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=now.get(Calendar.YEAR)+"-0"+i;
+                }
+                else {
+                    date=now.get(Calendar.YEAR)+"-"+i;
+                }
+
+                EnvironmentHealthZone environmentHealthZone=new EnvironmentHealthZone();
+                environmentHealthZone.setDate(date);
+                environmentHealthZone.setChongya(getZoneX14("冲压车间",date));//车间名和日期格式不能错，否则出现bug
+                environmentHealthZone.setCheshen(getZoneX14("车身车间",date));
+                environmentHealthZone.setTuzhuang(getZoneX14("涂装车间",date));
+                environmentHealthZone.setZongzhuang(getZoneX14("总装车间",date));
+                environmentHealthZone.setJijia(getZoneX14("机加车间",date));
+                environmentHealthZone.setZhuangpei(getZoneX14("装配车间",date));
+                result.add(i-1,environmentHealthZone);//往最后要返回的List集里面添加这一条list
+            }
+        }else{ //如果不是本年的数据，默认该年有12个月份
+            int nowMonth=12;
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=year+"-0"+i;
+                }
+                else {
+                    date=year+"-"+i;
+                }
+
+                EnvironmentHealthZone environmentHealthZone=new EnvironmentHealthZone();
+                environmentHealthZone.setDate(date);
+                environmentHealthZone.setChongya(getZoneX14("冲压车间",date));//车间名和日期格式不能错，否则出现bug
+                environmentHealthZone.setCheshen(getZoneX14("车身车间",date));
+                environmentHealthZone.setTuzhuang(getZoneX14("涂装车间",date));
+                environmentHealthZone.setZongzhuang(getZoneX14("总装车间",date));
+                environmentHealthZone.setJijia(getZoneX14("机加车间",date));
+                environmentHealthZone.setZhuangpei(getZoneX14("装配车间",date));
+                result.add(i-1,environmentHealthZone);//往最后要返回的List集里面添加这一条list
+            }}
+
+
+        return result;
+    }
+
+    /*  "工段/班组/工位: 获取均衡发展图表数据 " 获取列表平均值后的x14*/
+    public Double getZoneX14(String zone,String date){
+        return environmentBaseZoneService.findAllByZoneAndYear(zone,date).stream().mapToDouble(EnvironmentBaseZone::getX14).average().orElse(0D);
     }
 }
