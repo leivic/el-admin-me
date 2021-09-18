@@ -1088,4 +1088,28 @@ public class EnvironmentController {
     public Double getZoneX14(String zone,String date){
         return environmentBaseZoneService.findAllByZoneAndYear(zone,date).stream().mapToDouble(EnvironmentBaseZone::getX14).average().orElse(0D);
     }
+
+    @ApiOperation("班组: 按id删除数据库数据 ") //一定不能出错的地方 数据库中的日期格式，车间格
+    @GetMapping(value = "/deleteEnvironmentBaseGroupByid")
+    public void deleteEnvironmentBaseGroupByid(int id){
+        environmentBaseGroupService.deleteEnvironmentBaseGroupByid(id);
+    }
+
+    @ApiOperation("工位: 按id删除数据库数据 ") //一定不能出错的地方 数据库中的日期格式，车间格
+    @GetMapping(value = "/deleteEnvironmentBaseStationByid")
+    public void deleteEnvironmentBaseStationByid(int id){
+        environmentBaseStationService.deleteEnvironmentBaseStationByid(id);
+    }
+
+    @ApiOperation("工段: 按id删除数据库数据 ") //一定不能出错的地方 数据库中的日期格式，车间格
+    @GetMapping(value = "/deleteEnvironmentBaseWorkshopByid")
+    public void deleteEnvironmentBaseWorkshopByid(int id){
+        environmentBaseWorkShopService.deleteEnvironmentBaseWorkshopByid(id);
+    }
+
+    @ApiOperation("区域: 按id删除数据库数据 ") //一定不能出错的地方 数据库中的日期格式，车间格
+    @GetMapping(value = "/deleteEnvironmentBaseZoneByid")
+    public void deleteEnvironmentBaseZoneByid(int id){
+        environmentBaseZoneService.deleteEnvironmentBaseZoneByid(id);
+    }
 }

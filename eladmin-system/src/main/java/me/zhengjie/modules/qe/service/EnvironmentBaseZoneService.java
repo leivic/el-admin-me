@@ -1,8 +1,6 @@
 package me.zhengjie.modules.qe.service;
 
 
-import me.zhengjie.modules.qe.domain.EnvironmentBaseGroup;
-import me.zhengjie.modules.qe.domain.EnvironmentBaseWorkShop;
 import me.zhengjie.modules.qe.domain.EnvironmentBaseZone;
 import me.zhengjie.modules.qe.repository.EnrironmentBaseZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,5 +45,10 @@ public class EnvironmentBaseZoneService {
 
     public List<EnvironmentBaseZone> findAllByDate(String date){
         return enrironmentBaseZoneRepository.findAllByDate(date);
+    }
+
+    /*按ID删除对象*/
+    public void deleteEnvironmentBaseZoneByid(int id){
+        enrironmentBaseZoneRepository.deleteById(id);
     }
 }

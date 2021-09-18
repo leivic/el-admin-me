@@ -1,7 +1,6 @@
 package me.zhengjie.modules.qe.service;
 
 import me.zhengjie.modules.qe.domain.EnvironmentBaseGroup;
-import me.zhengjie.modules.qe.domain.EnvironmentBaseStation;
 import me.zhengjie.modules.qe.repository.EnvironmentBaseGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,5 +41,10 @@ public class EnvironmentBaseGroupService {
     /*按区域和月份查找所有*/
     public List<EnvironmentBaseGroup> findAllByZoneAnddate(String zone, String date){
         return environmentBaseGroupRepository.findAllByZoneAndYear(zone, date);
+    }
+
+    /*按照id删除对象*/
+    public void deleteEnvironmentBaseGroupByid(int id){
+        environmentBaseGroupRepository.deleteById(id);
     }
 }

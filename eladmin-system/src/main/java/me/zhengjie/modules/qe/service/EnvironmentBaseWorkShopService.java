@@ -45,4 +45,9 @@ public class EnvironmentBaseWorkShopService {
     public List<EnvironmentBaseWorkShop> findAllByZoneAndYear(String zone,String date){
         return environmentBaseWorkShopRepository.findAllByZoneAndYear(zone, date);
     }
+
+    /*按ID删除对象*/
+    public void deleteEnvironmentBaseWorkshopByid(int id){
+        environmentBaseWorkShopRepository.deleteById(id);
+    }
 }
