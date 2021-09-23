@@ -51,4 +51,7 @@ public class EnvironmentBaseStationService {
         return environmentBaseStationRepository.findAllByZoneAndYear(zone, date);
     }
 
+    public List<EnvironmentBaseStation> findAllBydate( String date){
+        return environmentBaseStationRepository.findAllByDate(date);
+    }
 }

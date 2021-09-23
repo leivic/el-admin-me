@@ -47,4 +47,8 @@ public class EnvironmentBaseGroupService {
     public void deleteEnvironmentBaseGroupByid(int id){
         environmentBaseGroupRepository.deleteById(id);
     }
+
+    public List<EnvironmentBaseGroup> findAllBydate( String date){
+        return environmentBaseGroupRepository.findAllByDate(date);
+    }
 }

@@ -17,5 +17,6 @@ public interface EnvironmentBaseGroupRepository extends JpaRepository<Environmen
     @Query(value = "select * from environment_base_group  where " +"zone = :zone and"+" date = :date",nativeQuery = true)
     List<EnvironmentBaseGroup> findAllByZoneAndYear(@Param("zone") String zone, @Param("date") String date);
 
-
+    @Query(value = "select * from environment_base_group  where " +" date = :date",nativeQuery = true)
+    List<EnvironmentBaseGroup> findAllByDate(@Param("date") String date);//纯粹按月份查找数据 所以excel的数据格式绝对不能错
 }

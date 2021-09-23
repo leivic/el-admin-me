@@ -50,4 +50,9 @@ public class EnvironmentBaseWorkShopService {
     public void deleteEnvironmentBaseWorkshopByid(int id){
         environmentBaseWorkShopRepository.deleteById(id);
     }
+
+    /*按区域和月份查找所有*/
+    public List<EnvironmentBaseWorkShop> findAllBydate(String date){
+        return environmentBaseWorkShopRepository.findAllByDate(date);
+    }
 }

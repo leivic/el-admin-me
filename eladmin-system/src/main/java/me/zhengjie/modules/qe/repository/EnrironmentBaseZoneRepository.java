@@ -1,6 +1,5 @@
 package me.zhengjie.modules.qe.repository;
 
-import me.zhengjie.modules.qe.domain.EnvironmentBaseWorkShop;
 import me.zhengjie.modules.qe.domain.EnvironmentBaseZone;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,4 +19,6 @@ public interface EnrironmentBaseZoneRepository extends JpaRepository<Environment
 
     @Query(value = "select * from environment_base_zone  where " +" date = :date",nativeQuery = true)
     List<EnvironmentBaseZone> findAllByDate(@Param("date") String date);//纯粹按月份查找数据 所以excel的数据格式绝对不能错
+
+
 }

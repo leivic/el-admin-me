@@ -87,7 +87,7 @@ public class EnvironmentController {
 
     @ApiOperation("工位: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseStation")
-    public void addEnvironmentBaseStation(@RequestParam("file") MultipartFile file) throws IOException{
+    public void addEnvironmentBaseStation(@RequestParam("file") MultipartFile file,String nickName) throws IOException{ //即便是传一个文件，也是可以正常传递变量，文件一个一个参数嘛
         FileInputStream fns=(FileInputStream)file.getInputStream();
         XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
         XSSFSheet sheetAt = wb.getSheetAt(0);
@@ -105,6 +105,7 @@ public class EnvironmentController {
             environmentBaseStation.setZone(zone);
             environmentBaseStation.setDate(date);
             environmentBaseStation.setWritten_by(written_by);
+            environmentBaseStation.setCreate_by(nickName);
             environmentBaseStation.setPeopleiscapable(sheetAt.getRow(2).getCell(i).getNumericCellValue());
             environmentBaseStation.setMatteriscorrect(sheetAt.getRow(3).getCell(i).getNumericCellValue());
             environmentBaseStation.setWokerisstandard(sheetAt.getRow(4).getCell(i).getNumericCellValue());
@@ -176,7 +177,7 @@ public class EnvironmentController {
 
     @ApiOperation("班组: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseGroup")
-    public void addEnvironmentBaseGroup(@RequestParam("file") MultipartFile file) throws IOException{
+    public void addEnvironmentBaseGroup(@RequestParam("file") MultipartFile file,String nickName) throws IOException{
         FileInputStream fns=(FileInputStream)file.getInputStream();
         XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
         XSSFSheet sheetAt = wb.getSheetAt(0);
@@ -191,6 +192,7 @@ public class EnvironmentController {
         for (int i = 5; i <sheetAt.getRow(1).getLastCellNum() ; i++) {
             EnvironmentBaseGroup environmentBaseGroup=new EnvironmentBaseGroup();
             environmentBaseGroup.setGroup1(sheetAt.getRow(1).getCell(i).toString());
+            environmentBaseGroup.setCreate_by(nickName);
             environmentBaseGroup.setDate(date);
             environmentBaseGroup.setZone(zone);
             environmentBaseGroup.setWritten_by(written_by);
@@ -314,7 +316,7 @@ public class EnvironmentController {
     /*完成，目前无bug*/
     @ApiOperation("工段: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseWorkShop")
-    public void addEnvironmentBaseWorkShop(@RequestParam("file") MultipartFile file) throws IOException{
+    public void addEnvironmentBaseWorkShop(@RequestParam("file") MultipartFile file,String nickName) throws IOException{
         FileInputStream fns=(FileInputStream)file.getInputStream();
         XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
         XSSFSheet sheetAt = wb.getSheetAt(0);
@@ -329,6 +331,7 @@ public class EnvironmentController {
         for (int i = 5; i <sheetAt.getRow(1).getLastCellNum() ; i++) {
             EnvironmentBaseWorkShop environmentBaseWorkShop=new EnvironmentBaseWorkShop();
             environmentBaseWorkShop.setWorkshop(sheetAt.getRow(1).getCell(i).toString());
+            environmentBaseWorkShop.setCreate_by(nickName);
             environmentBaseWorkShop.setZone(zone);
             environmentBaseWorkShop.setDate(date);
             environmentBaseWorkShop.setWritten_by(written_by);
@@ -461,7 +464,7 @@ public class EnvironmentController {
 
     @ApiOperation("区域: 增加基础数据")
     @PostMapping(value = "/addEnvironmentBaseZone")
-    public void addEnvironmentBaseZone(@RequestParam("file") MultipartFile file) throws IOException{
+    public void addEnvironmentBaseZone(@RequestParam("file") MultipartFile file,String nickName) throws IOException{
         FileInputStream fns=(FileInputStream)file.getInputStream();
         XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
         XSSFSheet sheetAt = wb.getSheetAt(0);
@@ -475,6 +478,7 @@ public class EnvironmentController {
         for (int i = 5; i <sheetAt.getRow(1).getLastCellNum() ; i++) {
             EnvironmentBaseZone environmentBaseZone=new EnvironmentBaseZone();
             environmentBaseZone.setZone(sheetAt.getRow(1).getCell(i).toString());
+            environmentBaseZone.setCreate_by(nickName);
             environmentBaseZone.setDate(date);
             environmentBaseZone.setWritten_by(written_by);
             environmentBaseZone.setGraft(sheetAt.getRow(2).getCell(i).getNumericCellValue());
@@ -1111,5 +1115,80 @@ public class EnvironmentController {
     @GetMapping(value = "/deleteEnvironmentBaseZoneByid")
     public void deleteEnvironmentBaseZoneByid(int id){
         environmentBaseZoneService.deleteEnvironmentBaseZoneByid(id);
+    }
+
+
+    /*  "工段/班组/工位: 获取低碳精益图表数据 " 获取列表平均值后的x1*/
+    public Double getStationX1onlyBydate(String date){
+        return environmentBaseStationService.findAllBydate(date).stream().mapToDouble(EnvironmentBaseStation::getX1).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getStationX2onlyBydate(String date){
+        return environmentBaseStationService.findAllBydate(date).stream().mapToDouble(EnvironmentBaseStation::getX2).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getGroupX3onlyBydate(String date){
+        return environmentBaseGroupService.findAllBydate(date).stream().mapToDouble(EnvironmentBaseGroup::getX3).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getGroupX4onlyBydate(String date){
+        return environmentBaseGroupService.findAllBydate(date).stream().mapToDouble(EnvironmentBaseGroup::getX4).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getGroupX5onlyBydate(String date){
+        return environmentBaseGroupService.findAllBydate(date).stream().mapToDouble(EnvironmentBaseGroup::getX5).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getWorkshopX6onlyBydate(String date){
+        return environmentBaseWorkShopService.findAllBydate(date).stream().mapToDouble(EnvironmentBaseWorkShop::getX6).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getWorkshopX7onlyBydate(String date){
+        return environmentBaseWorkShopService.findAllBydate(date).stream().mapToDouble(EnvironmentBaseWorkShop::getX7).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getWorkshopX8onlyBydate(String date){
+        return environmentBaseWorkShopService.findAllBydate(date).stream().mapToDouble(EnvironmentBaseWorkShop::getX8).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getWorkshopX9onlyBydate(String date){
+        return environmentBaseWorkShopService.findAllBydate(date).stream().mapToDouble(EnvironmentBaseWorkShop::getX9).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getWorkshopX10onlyBydate(String date){
+        return environmentBaseWorkShopService.findAllBydate(date).stream().mapToDouble(EnvironmentBaseWorkShop::getX10).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getZoneX11onlyBydate(String date){
+        return environmentBaseZoneService.findAllByDate(date).stream().mapToDouble(EnvironmentBaseZone::getX11).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getZoneX12onlyBydate(String date){
+        return environmentBaseZoneService.findAllByDate(date).stream().mapToDouble(EnvironmentBaseZone::getX12).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getZoneX13onlyBydate(String date){
+        return environmentBaseZoneService.findAllByDate(date).stream().mapToDouble(EnvironmentBaseZone::getX13).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    public Double getZoneX14onlyBydate(String date){
+        return environmentBaseZoneService.findAllByDate(date).stream().mapToDouble(EnvironmentBaseZone::getX14).average().orElse(0D); //车间名和日期格式不能错，x8不能为空
+    }
+
+    @ApiOperation("获取总揽数据 ") //一定不能出错的地方 数据库中的日期格式，车间格
+    @GetMapping(value = "/getenvironmenttotal")
+    public ArrayList getenvironmenttotal(String date){
+        ArrayList result=new ArrayList();
+        double y1=getStationX1onlyBydate(date)*1.261+getStationX2onlyBydate(date)*0.28;
+        double y2=getGroupX3onlyBydate(date)*1.17+getGroupX4onlyBydate(date)*0.22+getGroupX5onlyBydate(date)*1.2;
+        double y3=getWorkshopX6onlyBydate(date)*1.4+1.22*getWorkshopX7onlyBydate(date)+1.1*getWorkshopX8onlyBydate(date)+0.3*getWorkshopX9onlyBydate(date)+0.28*getWorkshopX10onlyBydate(date);
+        double y4=getZoneX11onlyBydate(date)*1.3+getZoneX12onlyBydate(date)*1.2+getZoneX13onlyBydate(date)*0.29+getZoneX14onlyBydate(date)*0.98;
+        double y5=y1+y2+y3+y4;
+        result.add(0,y1);
+        result.add(1,y2);
+        result.add(2,y3);
+        result.add(3,y4);
+        result.add(4,y5);
+        return result;
     }
 }

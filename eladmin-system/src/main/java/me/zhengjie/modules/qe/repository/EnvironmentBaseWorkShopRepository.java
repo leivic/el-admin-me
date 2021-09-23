@@ -1,5 +1,6 @@
 package me.zhengjie.modules.qe.repository;
 
+import me.zhengjie.modules.qe.domain.EnvironmentBaseStation;
 import me.zhengjie.modules.qe.domain.EnvironmentBaseWorkShop;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,5 +17,6 @@ public interface EnvironmentBaseWorkShopRepository extends JpaRepository<Environ
     @Query(value = "select * from environment_base_workshop  where " +"zone = :zone and"+" date = :date",nativeQuery = true)
     List<EnvironmentBaseWorkShop> findAllByZoneAndYear(@Param("zone") String zone,@Param("date") String date);//按区域和年获取数据
 
-
+    @Query(value = "select * from environment_base_workshop  where " +" date = :date",nativeQuery = true)
+    List<EnvironmentBaseWorkShop> findAllByDate(@Param("date") String date);//纯粹按月份查找数据 所以excel的数据格式绝对不能错
 }

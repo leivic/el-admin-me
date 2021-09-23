@@ -20,4 +20,7 @@ public interface EnvironmentBaseStationRepository extends JpaRepository<Environm
 
     @Query(value = "select station,x1 from environment_base_station  where " +"zone = :zone and"+" date = :date",nativeQuery = true)
     List<EnvironmentBaseStation> findStationAndX1ByDateAndZone(@Param("zone") String zone, @Param("date") String date);
+
+    @Query(value = "select * from environment_base_station  where " +" date = :date",nativeQuery = true)
+    List<EnvironmentBaseStation> findAllByDate(@Param("date") String date);//纯粹按月份查找数据 所以excel的数据格式绝对不能错
 }
