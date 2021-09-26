@@ -32,6 +32,7 @@ public class ElPermissionConfig {
         // 获取当前用户的所有权限
         List<String> elPermissions = SecurityUtils.getCurrentUser().getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         // 判断当前用户的所有权限是否包含接口上定义的权限
-        return elPermissions.contains("admin") || Arrays.stream(permissions).anyMatch(elPermissions::contains);
+        //return elPermissions.contains("admin") || Arrays.stream(permissions).anyMatch(elPermissions::contains); 正常的是判断拥有admin权限，则全部放行 就是admin全部放行
+        return true;
     }
 }

@@ -1179,16 +1179,33 @@ public class EnvironmentController {
     @GetMapping(value = "/getenvironmenttotal")
     public ArrayList getenvironmenttotal(String date){
         ArrayList result=new ArrayList();
-        double y1=getStationX1onlyBydate(date)*1.261+getStationX2onlyBydate(date)*0.28;
-        double y2=getGroupX3onlyBydate(date)*1.17+getGroupX4onlyBydate(date)*0.22+getGroupX5onlyBydate(date)*1.2;
-        double y3=getWorkshopX6onlyBydate(date)*1.4+1.22*getWorkshopX7onlyBydate(date)+1.1*getWorkshopX8onlyBydate(date)+0.3*getWorkshopX9onlyBydate(date)+0.28*getWorkshopX10onlyBydate(date);
-        double y4=getZoneX11onlyBydate(date)*1.3+getZoneX12onlyBydate(date)*1.2+getZoneX13onlyBydate(date)*0.29+getZoneX14onlyBydate(date)*0.98;
-        double y5=y1+y2+y3+y4;
+        double x1=getStationX1onlyBydate(date);
+        double x2=getStationX2onlyBydate(date);
+        double x3=getGroupX3onlyBydate(date);
+        double x4=getGroupX4onlyBydate(date);
+        double x5=getGroupX5onlyBydate(date);
+        double x6=getWorkshopX6onlyBydate(date);
+        double x7=getWorkshopX7onlyBydate(date);
+        double x8=getWorkshopX8onlyBydate(date);
+        double x9=getWorkshopX9onlyBydate(date);
+        double x10=getWorkshopX10onlyBydate(date);
+        double x11=getZoneX11onlyBydate(date);
+        double x12=getZoneX12onlyBydate(date);
+        double x13=getZoneX13onlyBydate(date);
+        double x14=getZoneX14onlyBydate(date);
+
+        double y1=x1*1.261+x2*0.28;
+        double y2=x3*1.17+x4*0.22+x5*1.2;
+        double y3=x6*1.4+1.22*x7+1.1*x8+0.3*x9+0.28*x10;
+        double y4=x11*1.3+x12*1.2+x13*0.29+x14*0.98;
+        double y5=((x1+x3+x5+x6+x7+x10+x11+x12+x14)/450)*100; //直接算出没带分号的分数
+        double y6=((x2+x4+x8+x9+x13)/120)*100;
         result.add(0,y1);
         result.add(1,y2);
         result.add(2,y3);
         result.add(3,y4);
         result.add(4,y5);
+        result.add(5,y6);
         return result;
     }
 }
