@@ -6,6 +6,7 @@ spring:
     check-template-location: false
   profiles:
     active: dev
+    #配置当前生效环境配置  修改成 active: prod即生效生产环境的配置
   jackson:
     time-zone: GMT+8
   data:
