@@ -28,4 +28,5 @@ public class ContinueFile {
     private String status;
     private String path;
     private Integer downloadcounts;
+    private String x;
 }

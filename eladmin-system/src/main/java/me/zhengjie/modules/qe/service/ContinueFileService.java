@@ -3,7 +3,10 @@ package me.zhengjie.modules.qe.service;
 import me.zhengjie.modules.qe.domain.ContinueFile;
 import me.zhengjie.modules.qe.repository.ContinueFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
 
 import java.util.Date;
 import java.util.List;
@@ -20,8 +23,9 @@ public class ContinueFileService {
         continueFileRepository.save(continueFile); //调用JPA封装的储存服务
     }
 
-    public List<ContinueFile> findAllContinue(){
-        return continueFileRepository.findAll();
+    public Page<ContinueFile> findAllContinue(int page, int size, String sort){
+        PageRequest pageable = PageRequest.of(page-1, size, Sort.Direction.ASC, sort);
+        return continueFileRepository.findAllfile(pageable);
     }
 
     public ContinueFile findByid(int id){

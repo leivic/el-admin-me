@@ -1,5 +1,6 @@
 package me.zhengjie.modules.qe.rest;
 
+import com.sun.org.apache.bcel.internal.generic.SWITCH;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.qe.domain.ContinueFile;
@@ -7,6 +8,7 @@ import me.zhengjie.modules.qe.service.ContinueFileService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,6 +66,42 @@ public class ContinueController {
 
         // 将文件信息放入数据库
         ContinueFile continueFile = new ContinueFile();
+        switch (file_type){
+            case"废品损失":
+                continueFile.setX("x1");
+                break;
+            case "物料损耗":
+                continueFile.setX("x2");
+                break;
+            case "质量停线":
+                continueFile.setX("x3");
+                break;
+            case "物料管理":
+                continueFile.setX("x4");
+                break;
+            case "问题拦截":
+                continueFile.setX("x5");
+                break;
+            case "质量资源损失(结果导向，指标完成)":
+                continueFile.setX("x6");
+                break;
+            case "质量资源损失(过程一致性)":
+                continueFile.setX("x7");
+                break;
+            case "体验质量":
+                continueFile.setX("x8");
+                break;
+            case "实物质量":
+                continueFile.setX("x9");
+                break;
+            case "质量策划":
+                continueFile.setX("x10");
+                break;
+            case "方案执行":
+                continueFile.setX("x11");
+                break;
+
+        }
         continueFile.setFile_name(oldFileName).setFile_type(file_type).setFile_date(file_date).setZone(zone).setCreate_by(create_by).setPath("/files/" + date).setNewfilename(newFileName);
         System.out.println(continueFile);
         continueFileService.saveContinueFile(continueFile);
@@ -73,8 +111,8 @@ public class ContinueController {
     }
 
     @GetMapping("/findAllContinue")
-    public List<ContinueFile> findAllContinue(){
-        return continueFileService.findAllContinue();
+    public Page<ContinueFile> findAllContinue(int page, int size, String sort){
+        return continueFileService.findAllContinue(page,size,sort);
     }
 
     // 文件下载
