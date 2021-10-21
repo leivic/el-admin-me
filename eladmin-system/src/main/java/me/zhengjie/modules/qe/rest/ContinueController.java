@@ -3,7 +3,9 @@ package me.zhengjie.modules.qe.rest;
 import com.sun.org.apache.bcel.internal.generic.SWITCH;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.modules.qe.domain.ContinueDatasource;
 import me.zhengjie.modules.qe.domain.ContinueFile;
+import me.zhengjie.modules.qe.service.ContinueDatasourceService;
 import me.zhengjie.modules.qe.service.ContinueFileService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -36,6 +38,8 @@ import java.util.List;
 public class ContinueController {
     @Autowired
     private ContinueFileService continueFileService;
+    @Autowired
+    private ContinueDatasourceService continueDatasourceService;
 
     @PostMapping("/upload") //上传文件的方法
     public String upload(MultipartFile aaa,String file_type,String file_date,String zone,String create_by) throws IOException { //Httpsession session
@@ -138,4 +142,31 @@ public class ContinueController {
 
     }
 
+    // 数据源查找
+    @GetMapping("/findByzoneanddate")
+    public ContinueDatasource findByzoneanddate(String zone,String date){
+        return continueDatasourceService.findByDateAndZone(zone, date);
+    }
+
+    // 更新或者新增数据
+    @PostMapping("/updateorsavecontinuedatasource")
+    public String updateorsavecontinuedatasource(String zone,String date,double x1,double x2,double x3,double x4,double x5, double x6, double x7, double x8,double x9, double x10, double x11, double x12){
+        int conut=continueDatasourceService.findCountByDateAndZone(zone, date);
+        if(conut ==0){ //如果这个月份和日期没存在，就新增数据
+            ContinueDatasource continueDatasource=new ContinueDatasource();
+            continueDatasource.setZone(zone).setDate(date).setX1(x1).setX2(x2).setX3(x3).setX4(x4).setX5(x5).setX6(x6).setX7(x7).setX8(x8).setX9(x9).setX10(x10).setX11(x11).setX12(x12);
+            continueDatasourceService.save(continueDatasource);
+            return "1"; //前端接收返回的1 新增成功
+        }
+        else if(conut >0){ //如果这个月份和日期已经存在, 就更新数据
+            continueDatasourceService.updateContinueDatasource(zone, date, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12);
+            return "2"; //前端接收返回的2 更新成功
+        }
+        return "0";
+    }
+
+    @GetMapping("/findCountcontinuedatasource")
+    public int findCountcontinuedatasource(String zone,String date){
+        return continueDatasourceService.findCountByDateAndZone(zone, date);
+    }
 }
