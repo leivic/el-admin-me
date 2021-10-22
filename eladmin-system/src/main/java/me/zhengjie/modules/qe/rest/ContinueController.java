@@ -27,9 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -169,4 +167,104 @@ public class ContinueController {
     public int findCountcontinuedatasource(String zone,String date){
         return continueDatasourceService.findCountByDateAndZone(zone, date);
     }
+
+    @GetMapping("/gettotalcontinueBydate") //所有区域的数据  还没有写好 
+    public ArrayList gettotalcontinueBydate(String zone,String year){
+        ArrayList arrayList=new ArrayList();
+        Calendar now=Calendar.getInstance();
+        String date;
+        if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+
+            int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=now.get(Calendar.YEAR)+"-0"+i;
+                }
+                else {
+                    date=now.get(Calendar.YEAR)+"-"+i;
+                }
+
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone(zone,date);
+                    arrayList.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                }catch(Exception e){
+                    arrayList.add(i-1,0);
+                }
+
+
+            }
+        }else{ //如果不是本年的数据，默认该年有12个月份
+            int nowMonth=12;
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=year+"-0"+i;
+                }
+                else {
+                    date=year+"-"+i;
+                }
+
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone(zone,date);
+                    arrayList.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                }catch(Exception e){
+                    arrayList.add(i-1,0);
+                }
+
+            }
+        }
+
+
+
+        return arrayList;
+    };
+
+    @GetMapping("/gettotalcontinueBydateandzone") //自定义区域的数据
+    public ArrayList gettotalcontinueBydateandzone(String zone,String year){
+        ArrayList arrayList=new ArrayList();
+        Calendar now=Calendar.getInstance();
+        String date;
+        if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+
+            int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=now.get(Calendar.YEAR)+"-0"+i;
+                }
+                else {
+                    date=now.get(Calendar.YEAR)+"-"+i;
+                }
+
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone(zone,date);
+                    arrayList.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                }catch(Exception e){
+                    arrayList.add(i-1,0);
+                }
+
+
+            }
+        }else{ //如果不是本年的数据，默认该年有12个月份
+            int nowMonth=12;
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=year+"-0"+i;
+                }
+                else {
+                    date=year+"-"+i;
+                }
+
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone(zone,date);
+                    arrayList.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                }catch(Exception e){
+                    arrayList.add(i-1,0);
+                }
+
+            }
+        }
+
+
+
+        return arrayList;
+    };
 }
