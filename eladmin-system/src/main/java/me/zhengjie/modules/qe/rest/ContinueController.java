@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.qe.domain.ContinueDatasource;
 import me.zhengjie.modules.qe.domain.ContinueFile;
+import me.zhengjie.modules.qe.polo.Continuetotaldata;
 import me.zhengjie.modules.qe.service.ContinueDatasourceService;
 import me.zhengjie.modules.qe.service.ContinueFileService;
 import org.apache.commons.io.FilenameUtils;
@@ -168,9 +169,15 @@ public class ContinueController {
         return continueDatasourceService.findCountByDateAndZone(zone, date);
     }
 
-    @GetMapping("/gettotalcontinueBydate") //所有区域的数据  还没有写好 
-    public ArrayList gettotalcontinueBydate(String zone,String year){
-        ArrayList arrayList=new ArrayList();
+    @GetMapping("/gettotalcontinueBydate") //所有区域的数据  还没有写好
+    public Continuetotaldata gettotalcontinueBydate(String year){
+        Continuetotaldata continuetotaldata=new Continuetotaldata();
+        ArrayList arrayList1=new ArrayList();
+        ArrayList arrayList2=new ArrayList();
+        ArrayList arrayList3=new ArrayList();
+        ArrayList arrayList4=new ArrayList();
+        ArrayList arrayList5=new ArrayList();
+
         Calendar now=Calendar.getInstance();
         String date;
         if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
@@ -185,14 +192,41 @@ public class ContinueController {
                 }
 
                 try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
-                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone(zone,date);
-                    arrayList.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("冲压车间",date);
+                    arrayList1.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
                 }catch(Exception e){
-                    arrayList.add(i-1,0);
+                    arrayList1.add(i-1,0);
                 }
-
-
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("车身车间",date);
+                    arrayList2.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                }catch(Exception e){
+                    arrayList2.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("涂装车间",date);
+                    arrayList3.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                }catch(Exception e){
+                    arrayList3.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("总装车间",date);
+                    arrayList4.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                }catch(Exception e){
+                    arrayList4.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("发动机工厂",date);
+                    arrayList5.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                }catch(Exception e){
+                    arrayList5.add(i-1,0);
+                }
             }
+            continuetotaldata.setChongyadata(arrayList1);
+            continuetotaldata.setCheshendata(arrayList2);
+            continuetotaldata.setTuzhuangdata(arrayList3);
+            continuetotaldata.setZongzhuangdata(arrayList4);
+            continuetotaldata.setFadongjidata(arrayList5);
         }else{ //如果不是本年的数据，默认该年有12个月份
             int nowMonth=12;
             for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
@@ -204,18 +238,48 @@ public class ContinueController {
                 }
 
                 try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
-                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone(zone,date);
-                    arrayList.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("冲压车间",date);
+                    arrayList1.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
                 }catch(Exception e){
-                    arrayList.add(i-1,0);
+                    arrayList1.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("车身车间",date);
+                    arrayList2.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                }catch(Exception e){
+                    arrayList2.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("涂装车间",date);
+                    arrayList3.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                }catch(Exception e){
+                    arrayList3.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("总装车间",date);
+                    arrayList4.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                }catch(Exception e){
+                    arrayList4.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("发动机工厂",date);
+                    arrayList5.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
+                }catch(Exception e){
+                    arrayList5.add(i-1,0);
                 }
 
             }
+
+            continuetotaldata.setChongyadata(arrayList1);
+            continuetotaldata.setCheshendata(arrayList2);
+            continuetotaldata.setTuzhuangdata(arrayList3);
+            continuetotaldata.setZongzhuangdata(arrayList4);
+            continuetotaldata.setFadongjidata(arrayList5);
         }
 
 
 
-        return arrayList;
+        return continuetotaldata;
     };
 
     @GetMapping("/gettotalcontinueBydateandzone") //自定义区域的数据
