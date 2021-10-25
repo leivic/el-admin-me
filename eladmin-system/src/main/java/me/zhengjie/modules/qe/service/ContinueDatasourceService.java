@@ -25,4 +25,12 @@ public class ContinueDatasourceService {
     public void updateContinueDatasource(String zone,String date,double x1,double x2,double x3,double x4,double x5,double x6,double x7,double x8,double x9,double x10,double x11,double x12){
         continueDatasourceRepository.updateContinueDatasource(zone, date, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12);
     };//按输入的内容更新所有数据
+
+    public int findCountByDate(String date){ //按月份查找数据的数量
+        return continueDatasourceRepository.findCountByDate(date);
+    };
+
+    public void updateContinueDatasourcex1x2(String date,double x1,double x2,double x3){
+        continueDatasourceRepository.updateContinueDatasourcex1x3(date, x1, x2, x3);
+    };//按输入的月份更新x1 x2 x3
 }

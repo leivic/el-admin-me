@@ -18,4 +18,14 @@ public interface ContinueDatasourceRepository extends JpaRepository<ContinueData
 
     @Query(value = "select count(*) from continue_datasource  where " +" zone = :zone"+" and "+"date = :date",nativeQuery = true)
     int findCountByDateAndZone(@Param("zone") String zone,@Param("date") String date);//查找这个月份和日期是否已经存在数据
+
+    @Transactional
+    @Modifying //更新x1 x2 x3 更新这个月的所有X1 x2 x3
+    @Query(value = "update ContinueDatasource c set c.x1=?2,c.x2=?3,c.x3=?4 where c.date=?1")
+    void updateContinueDatasourcex1x3( String date,double x1,double x2,double x3);
+
+    @Query(value = "select count(*) from continue_datasource  where " +" date = :date",nativeQuery = true)
+    int findCountByDate(@Param("date") String date);//按每个月查找是否有这条数据  数据的数量是多少
+
+
 }

@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.qe.domain.ContinueDatasource;
 import me.zhengjie.modules.qe.domain.ContinueFile;
+import me.zhengjie.modules.qe.polo.ContinuePiechart;
 import me.zhengjie.modules.qe.polo.Continuetotaldata;
 import me.zhengjie.modules.qe.service.ContinueDatasourceService;
 import me.zhengjie.modules.qe.service.ContinueFileService;
@@ -21,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -153,12 +153,41 @@ public class ContinueController {
         int conut=continueDatasourceService.findCountByDateAndZone(zone, date);
         if(conut ==0){ //如果这个月份和日期没存在，就新增数据
             ContinueDatasource continueDatasource=new ContinueDatasource();
+            ContinueDatasource continueDatasource1=new ContinueDatasource();
+            ContinueDatasource continueDatasource2=new ContinueDatasource();
+            ContinueDatasource continueDatasource3=new ContinueDatasource();
+            ContinueDatasource continueDatasource4=new ContinueDatasource();
+            ContinueDatasource continueDatasource5=new ContinueDatasource();
+
             continueDatasource.setZone(zone).setDate(date).setX1(x1).setX2(x2).setX3(x3).setX4(x4).setX5(x5).setX6(x6).setX7(x7).setX8(x8).setX9(x9).setX10(x10).setX11(x11).setX12(x12);
             continueDatasourceService.save(continueDatasource);
+            continueDatasourceService.updateContinueDatasourcex1x2(date, x1, x2, x3); //更新该月的所有x1 x2 x3的数据
+
+            if(continueDatasourceService.findCountByDateAndZone("冲压车间",date)==0){ //如果没有冲压车间这条数据  新增一条,但是本来没有 所以除了 x1 x2 x3的数据都是0
+                continueDatasource1.setZone("冲压车间").setDate(date).setX1(x1).setX2(x2).setX3(x3).setX4(0).setX5(0).setX6(0).setX7(0).setX8(0).setX9(0).setX10(0).setX11(0).setX12(0);
+                continueDatasourceService.save(continueDatasource1);
+            }
+            if(continueDatasourceService.findCountByDateAndZone("车身车间",date)==0){ //如果没有冲压车间这条数据  新增一条,但是本来没有 所以除了 x1 x2 x3的数据都是0
+                continueDatasource2.setZone("车身车间").setDate(date).setX1(x1).setX2(x2).setX3(x3).setX4(0).setX5(0).setX6(0).setX7(0).setX8(0).setX9(0).setX10(0).setX11(0).setX12(0);
+                continueDatasourceService.save(continueDatasource2);
+            }
+            if(continueDatasourceService.findCountByDateAndZone("涂装车间",date)==0){ //如果没有冲压车间这条数据  新增一条,但是本来没有 所以除了 x1 x2 x3的数据都是0
+                continueDatasource3.setZone("涂装车间").setDate(date).setX1(x1).setX2(x2).setX3(x3).setX4(0).setX5(0).setX6(0).setX7(0).setX8(0).setX9(0).setX10(0).setX11(0).setX12(0);
+                continueDatasourceService.save(continueDatasource3);
+            }
+            if(continueDatasourceService.findCountByDateAndZone("总装车间",date)==0){ //如果没有冲压车间这条数据  新增一条,但是本来没有 所以除了 x1 x2 x3的数据都是0
+                continueDatasource4.setZone("总装车间").setDate(date).setX1(x1).setX2(x2).setX3(x3).setX4(0).setX5(0).setX6(0).setX7(0).setX8(0).setX9(0).setX10(0).setX11(0).setX12(0);
+                continueDatasourceService.save(continueDatasource4);
+            }
+            if(continueDatasourceService.findCountByDateAndZone("发动机工厂",date)==0){ //如果没有冲压车间这条数据  新增一条,但是本来没有 所以除了 x1 x2 x3的数据都是0
+                continueDatasource5.setZone("发动机工厂").setDate(date).setX1(x1).setX2(x2).setX3(x3).setX4(0).setX5(0).setX6(0).setX7(0).setX8(0).setX9(0).setX10(0).setX11(0).setX12(0);
+                continueDatasourceService.save(continueDatasource5);
+            }
             return "1"; //前端接收返回的1 新增成功
         }
-        else if(conut >0){ //如果这个月份和日期已经存在, 就更新数据
+        else if(conut >0){ //如果这个月份和日期已经存在, 就更新数据  现在 同月的 x1 x2 x3必定是相等的 而且要么都没有 要么都有
             continueDatasourceService.updateContinueDatasource(zone, date, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12);
+            continueDatasourceService.updateContinueDatasourcex1x2(date, x1, x2, x3); //两个updatex1x2x3 确定x1x2x3三个数据只有两种情况、存在的x1 x2 x3 每月的每条都必定一样 要么就都没有
             return "2"; //前端接收返回的2 更新成功
         }
         return "0";
@@ -169,7 +198,7 @@ public class ContinueController {
         return continueDatasourceService.findCountByDateAndZone(zone, date);
     }
 
-    @GetMapping("/gettotalcontinueBydate") //所有区域的数据  还没有写好
+    @GetMapping("/gettotalcontinueBydate") //所有区域的数据
     public Continuetotaldata gettotalcontinueBydate(String year){
         Continuetotaldata continuetotaldata=new Continuetotaldata();
         ArrayList arrayList1=new ArrayList();
@@ -237,7 +266,7 @@ public class ContinueController {
                     date=year+"-"+i;
                 }
 
-                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）//为什么敢这样写 因为数据库所有x的default值是0 所以新增时所有的数据的值都是0
                     ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("冲压车间",date);
                     arrayList1.add(i-1,continueDatasource.getX1()*2+continueDatasource.getX2()*6+continueDatasource.getX3()*0.8+continueDatasource.getX4()*1.2+continueDatasource.getX5()*2+continueDatasource.getX6()*0.3+continueDatasource.getX7()*0.3+continueDatasource.getX8()*0.25+continueDatasource.getX9()*0.25+continueDatasource.getX10()*0.2+continueDatasource.getX11()*0.36+continueDatasource.getX12()*0.35);
                 }catch(Exception e){
@@ -330,5 +359,184 @@ public class ContinueController {
 
 
         return arrayList;
+    };
+
+    @GetMapping("/getcontinuezhiliangshuipinBydate") //和上方获取质量生态持续数据代码只有两句不同 其实写在一起 然后传个参数判断是哪种情况就行了 ，没必要写两个接口
+    public Continuetotaldata getcontinuezhiliangshuipinBydate(String year){
+        Continuetotaldata continuetotaldata=new Continuetotaldata();
+        ArrayList arrayList1=new ArrayList();
+        ArrayList arrayList2=new ArrayList();
+        ArrayList arrayList3=new ArrayList();
+        ArrayList arrayList4=new ArrayList();
+        ArrayList arrayList5=new ArrayList();
+
+        Calendar now=Calendar.getInstance();
+        String date;
+        if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+
+            int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=now.get(Calendar.YEAR)+"-0"+i;
+                }
+                else {
+                    date=now.get(Calendar.YEAR)+"-"+i;
+                }
+
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("冲压车间",date);
+                    arrayList1.add(i-1,(0.52*(continueDatasource.getX8()+continueDatasource.getX9())+2));
+                }catch(Exception e){
+                    arrayList1.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("车身车间",date);
+                    arrayList2.add(i-1,(0.52*(continueDatasource.getX8()+continueDatasource.getX9())+2));
+                }catch(Exception e){
+                    arrayList2.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("涂装车间",date);
+                    arrayList3.add(i-1,(0.52*(continueDatasource.getX8()+continueDatasource.getX9())+2));
+                }catch(Exception e){
+                    arrayList3.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("总装车间",date);
+                    arrayList4.add(i-1,(0.52*(continueDatasource.getX8()+continueDatasource.getX9())+2));
+                }catch(Exception e){
+                    arrayList4.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("发动机工厂",date);
+                    arrayList5.add(i-1,(0.52*(continueDatasource.getX8()+continueDatasource.getX9())+2));
+                }catch(Exception e){
+                    arrayList5.add(i-1,0);
+                }
+            }
+            continuetotaldata.setChongyadata(arrayList1);
+            continuetotaldata.setCheshendata(arrayList2);
+            continuetotaldata.setTuzhuangdata(arrayList3);
+            continuetotaldata.setZongzhuangdata(arrayList4);
+            continuetotaldata.setFadongjidata(arrayList5);
+        }else{ //如果不是本年的数据，默认该年有12个月份
+            int nowMonth=12;
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=year+"-0"+i;
+                }
+                else {
+                    date=year+"-"+i;
+                }
+
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("冲压车间",date);
+                    arrayList1.add(i-1,(0.52*(continueDatasource.getX8()+continueDatasource.getX9())+2));
+                }catch(Exception e){
+                    arrayList1.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("车身车间",date);
+                    arrayList2.add(i-1,(0.52*(continueDatasource.getX8()+continueDatasource.getX9())+2));
+                }catch(Exception e){
+                    arrayList2.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("涂装车间",date);
+                    arrayList3.add(i-1,(0.52*(continueDatasource.getX8()+continueDatasource.getX9())+2));
+                }catch(Exception e){
+                    arrayList3.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("总装车间",date);
+                    arrayList4.add(i-1,(0.52*(continueDatasource.getX8()+continueDatasource.getX9())+2));
+                }catch(Exception e){
+                    arrayList4.add(i-1,0);
+                }
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("发动机工厂",date);
+                    arrayList5.add(i-1,(0.52*(continueDatasource.getX8()+continueDatasource.getX9())+2));
+                }catch(Exception e){
+                    arrayList5.add(i-1,0);
+                }
+
+            }
+
+            continuetotaldata.setChongyadata(arrayList1);
+            continuetotaldata.setCheshendata(arrayList2);
+            continuetotaldata.setTuzhuangdata(arrayList3);
+            continuetotaldata.setZongzhuangdata(arrayList4);
+            continuetotaldata.setFadongjidata(arrayList5);
+        }
+
+
+
+        return continuetotaldata;
+    };
+
+
+    @GetMapping("/getzhiliangtishen")//获取质量提升潜力的数据
+    public ArrayList getzhiliangtishen(String date){
+        ArrayList arrayList=new ArrayList();
+
+
+        try{ //从冲压车间开始一个个添加进去
+            ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("冲压车间",date);
+            arrayList.add(0,(1.13*(continueDatasource.getX10()+continueDatasource.getX11()+continueDatasource.getX12())+1.25));
+        }catch(Exception e){
+            arrayList.add(0,0);
+        }
+
+        try{ //从冲压车间开始一个个添加进去
+            ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("车身车间",date);
+            arrayList.add(1,(1.13*(continueDatasource.getX10()+continueDatasource.getX11()+continueDatasource.getX12())+1.25));
+        }catch(Exception e){
+            arrayList.add(1,0);
+        }
+        try{ //从冲压车间开始一个个添加进去
+            ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("涂装车间",date);
+            arrayList.add(2,(1.13*(continueDatasource.getX10()+continueDatasource.getX11()+continueDatasource.getX12())+1.25));
+        }catch(Exception e){
+            arrayList.add(2,0);
+        }
+
+        try{ //从冲压车间开始一个个添加进去
+            ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("总装车间",date);
+            arrayList.add(3,(1.13*(continueDatasource.getX10()+continueDatasource.getX11()+continueDatasource.getX12())+1.25));
+        }catch(Exception e){
+            arrayList.add(3,0);
+        }
+        try{ //从冲压车间开始一个个添加进去
+            ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("发动机工厂",date);
+            arrayList.add(4,(1.13*(continueDatasource.getX10()+continueDatasource.getX11()+continueDatasource.getX12())+1.25));
+        }catch(Exception e){
+            arrayList.add(4,0);
+        }
+        return arrayList;
+    }
+
+    @GetMapping("/getContinuePiechartvalue") // 不要这么麻烦 取该月冲压车间的x1 x2 x3即可
+    public ArrayList<ContinuePiechart> getContinuePiechartvalue(String month){
+        ArrayList<ContinuePiechart> continuePiechartList=new ArrayList<>();
+
+        try{ //从冲压车间开始一个个添加进去
+            ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone("冲压车间",month);
+            ContinuePiechart continuePiechart1=new ContinuePiechart();
+            ContinuePiechart continuePiechart2=new ContinuePiechart();
+            ContinuePiechart continuePiechart3=new ContinuePiechart();
+            continuePiechartList.add(0,continuePiechart1.setName("质量停线").setValue(continueDatasource.getX3()));
+            continuePiechartList.add(1,continuePiechart2.setName("返修返工").setValue(continueDatasource.getX2()));
+            continuePiechartList.add(2,continuePiechart3.setName("废品损失").setValue(continueDatasource.getX1()));
+        }catch(Exception e){ //如果没找到那条数据 那么x1 x2 x3自然是0
+            ContinuePiechart continuePiechart1=new ContinuePiechart();
+            ContinuePiechart continuePiechart2=new ContinuePiechart();
+            ContinuePiechart continuePiechart3=new ContinuePiechart();
+            continuePiechartList.add(0,continuePiechart1.setName("质量停线").setValue(0));
+            continuePiechartList.add(1,continuePiechart2.setName("返修返工").setValue(0));
+            continuePiechartList.add(2,continuePiechart3.setName("废品损失").setValue(0));
+        }
+
+
+        return continuePiechartList;
     };
 }
