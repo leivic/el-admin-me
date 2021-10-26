@@ -7,6 +7,8 @@ import me.zhengjie.modules.qe.domain.ContinueDatasource;
 import me.zhengjie.modules.qe.domain.ContinueFile;
 import me.zhengjie.modules.qe.polo.ContinuePiechart;
 import me.zhengjie.modules.qe.polo.Continuetotaldata;
+import me.zhengjie.modules.qe.polo.Continuezhiliangshuipin;
+import me.zhengjie.modules.qe.polo.Continuezhiliangtishen;
 import me.zhengjie.modules.qe.service.ContinueDatasourceService;
 import me.zhengjie.modules.qe.service.ContinueFileService;
 import org.apache.commons.io.FilenameUtils;
@@ -539,4 +541,176 @@ public class ContinueController {
 
         return continuePiechartList;
     };
+
+    @GetMapping("/getzhiliangshuipin")
+    public Continuezhiliangshuipin getzhiliangshuipin(String zone,String year){
+        Continuezhiliangshuipin continuezhiliangshuipin=new Continuezhiliangshuipin();
+        Calendar now=Calendar.getInstance();
+        String date;
+        if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+            ArrayList arrayListx8=new ArrayList();
+            ArrayList arrayListx9=new ArrayList();
+            int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+
+                if(i<10){
+                    date=now.get(Calendar.YEAR)+"-0"+i;
+                }
+                else {
+                    date=now.get(Calendar.YEAR)+"-"+i;
+                }
+
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone(zone,date);
+                    arrayListx8.add(i-1,continueDatasource.getX8());
+                    arrayListx9.add(i-1,continueDatasource.getX9());
+                }catch(Exception e){
+                    arrayListx8.add(i-1,0);
+                    arrayListx9.add(i-1,0);
+                }
+
+
+            }
+            continuezhiliangshuipin.setTiyanzhiliang(arrayListx8);
+            continuezhiliangshuipin.setShiwuzhiliang(arrayListx9);
+        }else{ //如果不是本年的数据，默认该年有12个月份
+            int nowMonth=12;
+            ArrayList arrayListx8=new ArrayList();
+            ArrayList arrayListx9=new ArrayList();
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=year+"-0"+i;
+                }
+                else {
+                    date=year+"-"+i;
+                }
+
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone(zone,date);
+                    arrayListx8.add(i-1,continueDatasource.getX8());
+                    arrayListx9.add(i-1,continueDatasource.getX9());
+                }catch(Exception e){
+                    arrayListx8.add(i-1,0);
+                    arrayListx9.add(i-1,0);
+                }
+
+            }
+            continuezhiliangshuipin.setTiyanzhiliang(arrayListx8);
+            continuezhiliangshuipin.setShiwuzhiliang(arrayListx9);
+        }
+        return continuezhiliangshuipin;
+    };
+
+    @GetMapping("/getzhiliangtishenqianli")
+    public Continuezhiliangtishen getzhiliangtishenqianli(String zone, String year){
+        Continuezhiliangtishen continuezhiliangtishen=new Continuezhiliangtishen();
+        Calendar now=Calendar.getInstance();
+        String date;
+        if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+            ArrayList arrayListx10=new ArrayList();
+            ArrayList arrayListx11=new ArrayList();
+            ArrayList arrayListx12=new ArrayList();
+            int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+
+                if(i<10){
+                    date=now.get(Calendar.YEAR)+"-0"+i;
+                }
+                else {
+                    date=now.get(Calendar.YEAR)+"-"+i;
+                }
+
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone(zone,date);
+                    arrayListx10.add(i-1,continueDatasource.getX10());
+                    arrayListx11.add(i-1,continueDatasource.getX11());
+                    arrayListx12.add(i-1,continueDatasource.getX12());
+                }catch(Exception e){
+                    arrayListx10.add(i-1,0);
+                    arrayListx11.add(i-1,0);
+                    arrayListx12.add(i-1,0);
+                }
+
+
+            }
+            continuezhiliangtishen.setXianzhuang(arrayListx12);
+            continuezhiliangtishen.setZhiliangcehua(arrayListx10);
+            continuezhiliangtishen.setZhixing(arrayListx11);
+        }else{ //如果不是本年的数据，默认该年有12个月份
+            int nowMonth=12;
+            ArrayList arrayListx10=new ArrayList();
+            ArrayList arrayListx11=new ArrayList();
+            ArrayList arrayListx12=new ArrayList();
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=year+"-0"+i;
+                }
+                else {
+                    date=year+"-"+i;
+                }
+
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone(zone,date);
+                    arrayListx10.add(i-1,continueDatasource.getX10());
+                    arrayListx11.add(i-1,continueDatasource.getX11());
+                    arrayListx12.add(i-1,continueDatasource.getX12());
+                }catch(Exception e){
+                    arrayListx10.add(i-1,0);
+                    arrayListx11.add(i-1,0);
+                    arrayListx12.add(i-1,0);
+                }
+
+            }
+            continuezhiliangtishen.setXianzhuang(arrayListx12);
+            continuezhiliangtishen.setZhiliangcehua(arrayListx10);
+            continuezhiliangtishen.setZhixing(arrayListx11);
+        }
+        return continuezhiliangtishen;
+    };
+    @GetMapping("/getneibusunshi")
+    public ArrayList getneibusunshi(String zone, String year){
+        ArrayList arrayList=new ArrayList();
+        Calendar now=Calendar.getInstance();
+        String date;
+        if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){ //如果是本年的数据
+
+            int nowMonth=(now.get(Calendar.MONTH))+1;//取到当前月份
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=now.get(Calendar.YEAR)+"-0"+i;
+                }
+                else {
+                    date=now.get(Calendar.YEAR)+"-"+i;
+                }
+
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone(zone,date);
+                    arrayList.add(i-1,continueDatasource.getX6());
+                }catch(Exception e){
+                    arrayList.add(i-1,0);
+                }
+
+
+            }
+        }else{ //如果不是本年的数据，默认该年有12个月份
+            int nowMonth=12;
+            for (int i = 1; i <=nowMonth ; i++) {//循环到当前月份
+                if(i<10){
+                    date=year+"-0"+i;
+                }
+                else {
+                    date=year+"-"+i;
+                }
+
+                try{ //循环 如果是空指针异常（没查到，就往集合里添加0，查到了就添加真实数据 ）
+                    ContinueDatasource continueDatasource=continueDatasourceService.findByDateAndZone(zone,date);
+                    arrayList.add(i-1,continueDatasource.getX6());
+                }catch(Exception e){
+                    arrayList.add(i-1,0);
+                }
+
+            }
+        }
+        return arrayList;
+    }
 }
