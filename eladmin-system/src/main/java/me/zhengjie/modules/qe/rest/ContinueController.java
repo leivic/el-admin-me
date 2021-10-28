@@ -15,6 +15,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -712,5 +714,11 @@ public class ContinueController {
             }
         }
         return arrayList;
+    }
+
+    @GetMapping("/findAllBydatetypeAndZone")
+    public Page<ContinueFile>  findAllBydatetypeAndZone(int page, int size, String sort,String date,String type,String zone){
+
+        return continueFileService.findAllBydatetypeAndZone(page, size, sort, date, type, zone);
     }
 }

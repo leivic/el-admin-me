@@ -30,4 +30,9 @@ public class ContinueFileService {
     public ContinueFile findByid(int id){
         return continueFileRepository.findById(id);
     }
+
+    public Page<ContinueFile>  findAllBydatetypeAndZone(int page, int size, String sort,String date,String type,String zone){
+        PageRequest pageable = PageRequest.of(page-1, size, Sort.Direction.ASC, sort);
+        return continueFileRepository.findAllBydatetypeAndZone(pageable,date,type,zone);
+    }//多参数查询 还不是模糊查询（因为前端输入框的那些值都是固定值）
 }
